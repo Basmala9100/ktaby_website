@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Add New Book | ktaby</title>
+    </head>
+    <body>
+        <!-- Navigation Bar -->
+        <nav id="navbar_addbook">
+            <ul>
+                <li><a href="admin_page.html">Dashboard</a></li>
+                <li><a href="manage_books.html">Manage Books</a></li>
+                <li><a href="add_new_book.html">Add New Book</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <div id="addNewBook-container">
+            <h2 id="Add Book">Add New Book</h2>
+            <form id="addNewBook-form">
+                <label for="book_id">Book ID:</label><br>
+                <input type="text" id="book_id" name="book_id" placeholder="Book ID" required><br>
+
+                <label for="book_name">Book Name:</label><br>
+                <input type="text" id="book_name" name="book_name" placeholder="Book Name" required><br>
+
+                <label for="author">Author:</label><br>
+                <input type="text" id="author" name="author" placeholder="Author" required><br>
+
+                <label for="category">Category:</label><br>
+                <input type="text" id="category" name="category" placeholder="Category" required><br>
+
+                <label for="description">Description:</label><br>
+                <input type="text" id="description" name="description" placeholder="Description" required><br><br>
+
+                <button type="submit">Add Book</button>
+            </form>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 ktaby. All rights reserved.</p>
+        </footer>
+    </body>
+</html>

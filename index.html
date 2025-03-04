@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ktaby</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="SignUp.html" id="auth-link">Sign Up</a></li>
+            <li><a href="logIn.html" id="auth-link">Log in</a></li>
+        </ul>
+    </nav>
+    
+    <!--Hero section-->
+    <header id="hero-section">
+        <h1>Welcome to Our Ktaby website</h1>
+        <p>Explore a vast collection of books, borrow your favorites, and manage your personal library.</p>
+        <a href="SignUp.html" class="btn">Get Started</a>
+    </header>
+
+    <!-- Search Bar -->
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="Search books by title, author, or category...">
+        <button onclick="searchBooks()">Search</button>
+    </div>
+    
+    <!-- Featured Books -->
+    <section id="featured-books">
+        <h2>Featured Books</h2>
+        <div class="book-list">
+            <div class="book-card">
+                <h3>The Great Gatsby</h3>
+                <p>By F. Scott Fitzgerald</p>
+                <a href="#">View Details</a>
+            </div>
+            <div class="book-card">
+                <h3>1984</h3>
+                <p>By George Orwell</p>
+                <a href="#">View Details</a>
+            </div>
+            <div class="book-card">
+                <h3>To Kill a Mockingbird</h3>
+                <p>By Harper Lee</p>
+                <a href="#">View Details</a>
+            </div>
+        </div>
+    </section>
+
+    <script src="index.js"></script>
+
+    <footer>
+        <p>&copy; 2025 ktaby. All rights reserved.</p>
+    </footer>
+</body>
+</html>
