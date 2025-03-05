@@ -16,7 +16,58 @@
                 <li><a href="index.html">Logout</a></li>
             </ul>
         </nav>
+        <div id="books-container">
+            <h2 id="forAvailable">Available Books</h2>
 
+            <div class="book-list_admin">
+                <div class="book-card_admin">
+                    <div class="book-info_admin">
+                        <h3>Book 1</h3>
+                        <p>Author</p>
+                        <p>Description</p>
+                        <p>Borrowed or not</p>
+                    </div>
+                    <button class="options-btn" onclick="toggleMenu('menu1')">...</button>
+                    <div class="options-menu" id="menu1">
+                        <a href="#">View Details</a>
+                        <a href="#">Edit</a>
+                        <a href="#" onclick="deleteBook(this)">Delete</a>
+                    </div>
+                </div>
+
+                <div class="book-card_admin">
+                    <div class="book-info_admin">
+                        <h3>Book 2</h3>
+                        <p>Author</p>
+                        <p>Description</p>
+                        <p>Borrowed or not</p>
+                    </div>
+                    <button class="options-btn" onclick="toggleMenu('menu2')">...</button>
+                    <div class="options-menu" id="menu2">
+                        <a href="#">View Details</a>
+                        <a href="#">Edit</a>
+                        <a href="#" onclick="deleteBook(this)">Delete</a>
+                    </div>
+                </div>
+
+                <div class="book-card_admin">
+                    <div class="book-info_admin">
+                        <h3>Book 3</h3>
+                        <p>Author</p>
+                        <p>Description</p>
+                        <p>Borrowed or not</p>
+                    </div>
+                    <button class="options-btn" onclick="toggleMenu('menu3')">...</button>
+                    <div class="options-menu" id="menu3">
+                        <a href="#">View Details</a>
+                        <a href="#">Edit</a>
+                        <a href="#" onclick="deleteBook(this)">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
         <footer>
             <p>&copy; 2025 ktaby. All rights reserved.</p>
         </footer>
