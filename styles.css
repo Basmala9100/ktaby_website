@@ -8,6 +8,13 @@ h1, h2{
     font-size: 32px;
     margin-bottom: 10px;
 }
+#forAvailable{
+    text-align: center;
+    font-size: 32px;
+    margin-top: 80px;
+    margin-bottom: 50px;
+}
+
 /* Centering the login/signup box */
 #signup-container, #login-container, #addNewBook-container {
     width: 350px;
@@ -49,8 +56,9 @@ h1, h2{
 /* Style the Navbar */
 #navbar, #navbar_addbook, #navbar_dashboard_admin, #navbar_manage_admin, #navbar_addbook {
     position: absolute; /* Positions the navbar at the top */
-    top: 30px; /* Moves navbar 10px from the top */
-    right: 20px; /* Moves navbar to the right */
+    padding: 15px;
+    top: 20px; /* Moves navbar 10px from the top */
+    right: 10px; /* Moves navbar to the right */
 }
 /* Remove default list styles */
 #navbar ul, #navbar_addbook ul, #navbar_dashboard_admin ul, #navbar_manage_admin ul, #navbar_addbook ul {
@@ -139,4 +147,69 @@ footer{
     margin-top: 10px;
     text-decoration: none;
     color: #007bff;
+}
+
+/* Books Container */
+#books-container {
+    width: 40%;  /* Reduce width so it's more to the left */
+    margin: 60px auto 60px 30%; /* Move it down and to the left */
+}
+/* Book List */
+.book-list_admin {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;  /* Increase space between books */
+}
+/* Book Card */
+.book-card_admin {
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    max-width: 750px;
+    margin-left: 100; /* Align more to the left */
+}
+/* Book Info */
+.book-info_admin {
+    text-align: left;
+}
+
+/* Options Button */
+.options-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+/* Options Button */
+.options-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+/* Options Menu */
+.options-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 5px;
+    right: 10px;
+    top: 40px;
+}
+.options-menu a {
+    display: block;
+    text-decoration: none;
+    padding: 8px 10px;
+    color: black;
+    font-size: 14px;
+}
+.options-menu a:hover {
+    background: #f2f2f2;
 }
