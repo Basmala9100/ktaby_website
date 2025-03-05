@@ -47,23 +47,23 @@ h1, h2{
 }
 
 /* Style the Navbar */
-#navbar, #navbar_addbook, #navbar_dashboard_admin, #navbar_manage_admin {
+#navbar, #navbar_addbook, #navbar_dashboard_admin, #navbar_manage_admin, #navbar_addbook {
     position: absolute; /* Positions the navbar at the top */
     top: 30px; /* Moves navbar 10px from the top */
     right: 20px; /* Moves navbar to the right */
 }
 /* Remove default list styles */
-#navbar ul, #navbar_addbook ul, #navbar_dashboard_admin ul, #navbar_manage_admin ul {
+#navbar ul, #navbar_addbook ul, #navbar_dashboard_admin ul, #navbar_manage_admin ul, #navbar_addbook ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex; /* Align items horizontally */
 }
 /* Style the Navbar Links */
-#navbar ul li, #navbar_addbook ul li, #navbar_dashboard_admin ul li,#navbar_manage_admin ul li {
+#navbar ul li, #navbar_addbook ul li, #navbar_dashboard_admin ul li,#navbar_manage_admin ul li, #navbar_addbook ul li {
     margin-left: 20px; /* Adds space between items */
 }
-#navbar ul li a,#navbar_addbook ul li a, #navbar_dashboard_admin ul li a, #navbar_manage_admin ul li a {
+#navbar ul li a,#navbar_addbook ul li a, #navbar_dashboard_admin ul li a, #navbar_manage_admin ul li a, #navbar_addbook ul li a {
     text-decoration: none;
     color: #333; /* Dark text */
     font-size: 16px;
@@ -71,10 +71,11 @@ h1, h2{
     border-radius: 5px;
     transition: background 0.3s ease;
 }
-#navbar ul li a:hover #navbar_addbook ul li a:hover, #navbar_dashboard_admin ul li a:hover, #navbar_manage_admin ul li a:hover {
+#navbar ul li a:hover #navbar_addbook ul li a:hover, #navbar_dashboard_admin ul li a:hover, #navbar_manage_admin ul li a:hover, #navbar_addbook ul li a:hover {
     background: #007bff;
     color: white;
 }
+
 
 footer{
     text-align: center;
