@@ -13,7 +13,7 @@
                 <li><a href="admin_page.html">Home</a></li>
                 <li><a href="manage_books.html">Manage Books</a></li>
                 <li><a href="add_new_book.html">Add Book</a></li>
-                <li><a href="index.html">Logout</a></li>
+                <li><a href="index.html">Log Out</a></li>
             </ul>
         </nav>
         <div id="books-container">
@@ -22,51 +22,63 @@
             <div class="book-list_admin">
                 <div class="book-card_admin">
                     <div class="book-info_admin">
-                        <h3>Book 1</h3>
-                        <p>Author</p>
-                        <p>Description</p>
-                        <p>Borrowed or not</p>
+                        <h3>The Great Gatsby</h3>
+                        <p>F. Scott Fitzgerald</p>
+                        <p>A novel about the American dream and the roaring twenties.</p>
+                        <p>Not Borrowed</p>
                     </div>
                     <button class="options-btn" onclick="toggleMenu('menu1')">...</button>
                     <div class="options-menu" id="menu1">
-                        <a href="#">View Details</a>
-                        <a href="#">Edit</a>
+                        <a href="manage_books.html">View Details</a>
                         <a href="#" onclick="deleteBook(this)">Delete</a>
                     </div>
                 </div>
 
                 <div class="book-card_admin">
                     <div class="book-info_admin">
-                        <h3>Book 2</h3>
-                        <p>Author</p>
-                        <p>Description</p>
-                        <p>Borrowed or not</p>
+                        <h3>To Kill a Mockingbird</h3>
+                        <p>Harper Lee</p>
+                        <p>A classic novel about racial injustice and moral growth.</p>
+                        <p>Borrowed</p>
                     </div>
                     <button class="options-btn" onclick="toggleMenu('menu2')">...</button>
                     <div class="options-menu" id="menu2">
-                        <a href="#">View Details</a>
-                        <a href="#">Edit</a>
+                        <a href="manage_books.html">View Details</a>
                         <a href="#" onclick="deleteBook(this)">Delete</a>
                     </div>
                 </div>
 
                 <div class="book-card_admin">
                     <div class="book-info_admin">
-                        <h3>Book 3</h3>
-                        <p>Author</p>
-                        <p>Description</p>
-                        <p>Borrowed or not</p>
+                        <h3>1984</h3>
+                        <p>George Orwell</p>
+                        <p>A dystopian novel about totalitarianism and surveillance.</p>
+                        <p>Not Borrowed</p>
                     </div>
                     <button class="options-btn" onclick="toggleMenu('menu3')">...</button>
                     <div class="options-menu" id="menu3">
-                        <a href="#">View Details</a>
-                        <a href="#">Edit</a>
+                        <a href="manage_books.html">View Details</a>
                         <a href="#" onclick="deleteBook(this)">Delete</a>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script>
+            function toggleMenu(menuId) {
+                let menu = document.getElementById(menuId);
+                menu.style.display = menu.style.display === "block" ? "none" : "block";
+            }
+
+            // Function to delete a book
+            function deleteBook(element) {
+                let bookCard = element.closest(".book-card_admin"); 
+                if (bookCard) {
+                    bookCard.remove();
+                    alert("Book deleted successfully.");
+                }
+            }   
+        </script>
         
         <footer>
             <p>&copy; 2025 ktaby. All rights reserved.</p>

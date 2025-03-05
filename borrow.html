@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrow a Book</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+    <h1>Available Books</h1>
+    <div  class="book-list">
+        <div class="book">
+            <h3>The Great Gatsby</h3>
+            <p>Author: F. Scott Fitzgerald</p>
+            <p class="status available">Available</p>
+            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+        </div>
+
+        <div class="book">
+            <h3>1984</h3>
+            <p>Author: George Orwell</p>
+            <p class="status available">Available</p>
+            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+        </div>
+
+        <div class="book">
+            <h3>To Kill a Mockingbird</h3>
+            <p>Author: Harper Lee</p>
+            <p class="status available">Available</p>
+            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+        </div>
+    </div>
+
+    <script>
+        function borrowBook(button) {
+            let book = button.parentElement;
+            let status = book.querySelector(".status");
+
+            if (status.classList.contains("available")) {
+                status.textContent = "Not Available";
+                status.classList.remove("available");
+                status.classList.add("unavailable");
+                button.disabled = true;
+
+                // Store in local storage
+                let borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
+                borrowedBooks.push(book.innerHTML);
+                localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
+
+                alert("Book borrowed successfully!");
+            }
+        }
+    </script>
+</body>
+</html>

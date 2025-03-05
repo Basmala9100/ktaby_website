@@ -13,11 +13,49 @@
                 <li><a href="admin_page.html">Home</a></li>
                 <li><a href="manage_books.html">Manage Books</a></li>
                 <li><a href="add_new_book.html">Add Book</a></li>
-                <li><a href="index.html">Logout</a></li>
+                <li><a href="index.html">Log Out</a></li>
             </ul>
         </nav>
 
-        
+        <div class="container_management">
+            <h2>Book Details</h2>
+    
+            <div class="book_details">
+                <label>ID:</label>
+                <input type="text" id="bookId" value="Book id" disabled>
+    
+                <label>Name:</label>
+                <input type="text" id="bookName" value="Book name" disabled>
+    
+                <label>Author:</label>
+                <input type="text" id="bookAuthor" value="Book author" disabled>
+    
+                <label>Category:</label>
+                <input type="text" id="bookCategory" value="Book category" disabled>
+    
+                <label>Description:</label>
+                <input type="text" id="bookDescription" value="Book description" disabled>
+    
+                <label>Borrowed:</label>
+                <input type="text" id="bookBorrowed" value="No" disabled>
+    
+                <button id="editBtn" onclick="enableEditing()">Edit</button>
+                <button id="saveBtn" style="display: none;">Save</button>
+            </div>
+        </div>
+    
+        <script>
+            function enableEditing() {
+                document.getElementById("bookName").disabled = false;
+                document.getElementById("bookAuthor").disabled = false;
+                document.getElementById("bookCategory").disabled = false;
+                document.getElementById("bookDescription").disabled = false;
+                document.getElementById("bookBorrowed").disabled = false;
+                document.getElementById("editBtn").style.display = "none";
+                document.getElementById("saveBtn").style.display = "inline-block";
+            }
+        </script>
+    
 
         <footer>
             <p>&copy; 2025 ktaby. All rights reserved.</p>

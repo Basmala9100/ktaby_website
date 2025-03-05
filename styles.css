@@ -2,6 +2,8 @@ body {
     background-color: aliceblue;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 h1, h2{
     text-align: center;
@@ -127,6 +129,8 @@ footer{
     display: flex;
     justify-content: center;
     gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 .book-card {
     background: white;
@@ -134,6 +138,7 @@ footer{
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     width: 200px;
+    position: relative;
 }
 .book-card h3 {
     font-size: 18px;
@@ -199,9 +204,11 @@ footer{
     background: white;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
+    border: 1px solid #ccc;
     padding: 5px;
     right: 10px;
     top: 40px;
+    z-index: 10;
 }
 .options-menu a {
     display: block;
@@ -212,4 +219,121 @@ footer{
 }
 .options-menu a:hover {
     background: #f2f2f2;
+}
+
+.container_management {
+    background-color: white;
+    width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 50px auto;
+}
+
+.book_details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+label {
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 10px;
+}
+div.container_management input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button.book_details {
+    width: 100%;
+    background-color: #007bff;
+    color: #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+#editBtn {
+    background-color: #007bff;
+    color: white;
+}
+#saveBtn {
+    background-color: #28a745;
+    color: white;
+    display: none;
+}
+
+/*******borrow new book*********/
+/* Individual Book Styling */
+.book {
+    background: white;
+    padding: 15px;
+    width: 220px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.book h3 {
+    font-size: 18px;
+    color: #007bff;
+}
+.book p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Status Styling */
+.status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+.available {
+    color: green;
+}
+.unavailable {
+    color: red;
+}
+
+/* Borrow Button Styling */
+.borrow-btn {
+    padding: 8px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.borrow-btn:hover {
+    background: #0056b3;
+}
+.borrow-btn:disabled {
+    background: gray;
+    cursor: not-allowed;
+}
+
+/* Borrowed Books Section */
+.book-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* No Books Message */
+#borrowed-books p {
+    font-size: 16px;
+    color: #777;
+    margin-top: 20px;
 }
