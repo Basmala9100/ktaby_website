@@ -41,7 +41,7 @@ h1, h2{
     margin-right: 5px;
 }
 /* Style the login/signup button */
-#signup-form button, #login-form button,#addNewBook-form button {
+#signup-form button, #login-form button,#addNewBook-form button, #editBtn{
     width: 100%;
     padding: 10px;
     background: #007bff;
@@ -51,7 +51,7 @@ h1, h2{
     cursor: pointer;
     font-size: 16px;
 }
-#signup-form button:hover, #login-form button:hover, #addNewBook-form button:hover, #search-container button:hover{
+#signup-form button:hover, #login-form button:hover, #addNewBook-form button:hover, #search-container button:hover, #editBtn:hover{
     background: #0056b3;
 }
 
@@ -259,15 +259,16 @@ button.book_details {
     cursor: pointer;
 }
 
-
-#editBtn {
-    background-color: #007bff;
-    color: white;
-}
 #saveBtn {
     background-color: #28a745;
     color: white;
     display: none;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 /*******borrow new book*********/
