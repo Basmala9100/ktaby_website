@@ -35,9 +35,12 @@
     
                 <label>Description:</label>
                 <input type="text" id="bookDescription" value="Book description" disabled>
-    
-                <label>Borrowed:</label>
-                <input type="text" id="bookBorrowed" value="No" disabled><br><br>
+
+                <label for="bookBorrowed">Borrowed:</label>
+                <select id="bookBorrowed" disabled>
+                    <option>No</option>
+                    <option>Yes</option>
+                </select><br><br>
     
                 <button id="editBtn" onclick="enableEditing()">Edit</button>
                 <button id="saveBtn" style="display: none;">Save</button>
