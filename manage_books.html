@@ -44,6 +44,8 @@
     
                 <button id="editBtn" onclick="enableEditing()">Edit</button>
                 <button id="saveBtn" style="display: none;">Save</button>
+                <br>
+                <button id="delete_manage" onclick="deleteBook(this)">Delete</button> 
             </div>
         </div>
     
@@ -57,6 +59,14 @@
                 document.getElementById("editBtn").style.display = "none";
                 document.getElementById("saveBtn").style.display = "inline-block";
             }
+
+            function deleteBook(element) {
+                let bookCard = element.closest(".book-card_admin"); 
+                if (bookCard) {
+                    bookCard.remove();
+                    alert("Book deleted successfully.");
+                }
+            }  
         </script>
     
 
