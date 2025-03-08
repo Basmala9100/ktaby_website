@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,50 @@
     </head>
     <body>
         <!-- Navigation Bar -->
-        <nav id="navbar_dashboard_admin">
+        <nav class="navbar">
             <ul>
-                <li><a href="user_page.html">home</a></li>
-                <li><a href="view_borrowed.html">view borrowed Books</a></li>
-                <li><a href="borrow.html">borrow New Book</a></li>
+                <li><a href="user_page.html">Home</a></li>
+                <li><a href="view_borrowed.html">Borrowed Books</a></li>
+                <li><a href="borrow.html">Borrow New Book</a></li>
                 <li><a href="index.html">Log Out</a></li>
             </ul>
         </nav>
 
-        <footer>
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <h2>Welcome to Ktaby!</h2>
+            <p>Explore our collection of books 📚 and borrow your favorite ones.</p>
+        </header>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search books by title, author, or category...">
+            <button class="search-button" onclick="searchBooks()">Search</button>
+        </div>
+
+        <!-- Featured Books Section -->
+        <section class="featured-books">
+            <h2>Featured Books</h2>
+            <div class="book-list">
+                <div class="book-card">
+                    <h3>The Great Gatsby</h3>
+                    <p>By F. Scott Fitzgerald</p>
+                    <a href="#" class="book-link">View Details</a>
+                </div>
+                <div class="book-card">
+                    <h3>1984</h3>
+                    <p>By George Orwell</p>
+                    <a href="#" class="book-link">View Details</a>
+                </div>
+                <div class="book-card">
+                    <h3>To Kill a Mockingbird</h3>
+                    <p>By Harper Lee</p>
+                    <a href="#" class="book-link">View Details</a>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="footer">
             <p>&copy; 2025 ktaby. All rights reserved.</p>
         </footer>
     </body>

@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Sign Up | ktaby</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div id="signup-container">
-            <h2 id="Sign-up">Sign Up</h2>
-            <form id="signup-form">
-                <label for="username">UserName</label><br>
-                <input type="text" id="signup-username" placeholder="Username" required><br>
+<head>
+    <title>Sign Up | ktaby</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-                <label for="email">Email</label><br>
-                <input type="email" id="signup-email" placeholder="Email" required><br>
+    <!-- Sign-Up Form Section -->
+    <div class="centered-section">
+        <h2 class="title">Sign Up</h2>
+        <form>
+            <label for="username">UserName</label><br>
+            <input type="text" class="input-field" id="signup-username" placeholder="Username" required><br>
 
-                <label for="password">Password</label><br>
-                <input type="password" id="signup-password" placeholder="Password" required><br>
-                
-                <label for="password-confirm">Confirm Password</label><br>
-                <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required><br>
-                
-                <label>User Type</label><br>
-                <input type="radio" id="admin" name="is_admin" value="admin">
-                <label for="admin">Admin</label><br>
-                <input type="radio" id="user" name="is_admin" value="user">
-                <label for="user">User</label><br><br>
+            <label for="email">Email</label><br>
+            <input type="email" class="input-field" id="signup-email" placeholder="Email" required><br>
 
-                <button type="submit" onclick="alert('Welcome to the new world!💗')">Sign Up</button>
-            </form>
-        </div>
+            <label for="password">Password</label><br>
+            <input type="password" class="input-field" id="signup-password" placeholder="Password" required><br>
+            
+            <label for="password-confirm">Confirm Password</label><br>
+            <input type="password" class="input-field" id="signup-confirm-password" placeholder="Confirm Password" required><br>
+            
+            <label>User Type</label><br>
+            <input type="radio" id="admin" name="is_admin" value="admin">
+            <label for="admin">Admin</label><br>
+            <input type="radio" id="user" name="is_admin" value="user">
+            <label for="user">User</label><br><br>
 
-        <footer>
-            <p>&copy; 2025 ktaby. All rights reserved.</p>
-        </footer>
-    </body>
+            <button type="submit" class="button" onclick="alert('Welcome to the new world!💗')">Sign Up</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 ktaby. All rights reserved.</p>
+    </footer>
+
+</body>
 </html>

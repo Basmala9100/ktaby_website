@@ -8,7 +8,7 @@
     </head>
     <body>
         <!-- Navigation Bar -->
-        <nav id="navbar_addbook">
+        <nav class="navbar">
             <ul>
                 <li><a href="admin_page.html">Home</a></li>
                 <li><a href="manage_books.html">Manage Books</a></li>
@@ -17,29 +17,29 @@
             </ul>
         </nav>
         
-        <div id="addNewBook-container">
-            <h2 id="Add Book">New Book</h2>
+        <div class="centered-section">
+            <h2 class="title">New Book</h2>
             <form id="addNewBook-form">
-                <label for="book_id">Book ID:</label><br>
-                <input type="text" id="book_id" name="book_id" placeholder="Book ID" required><br>
+                <label for="book_id">Book ID:</label>
+                <input type="text" id="book_id" name="book_id" class="input-field" placeholder="Book ID" required>
 
-                <label for="book_name">Book Name:</label><br>
-                <input type="text" id="book_name" name="book_name" placeholder="Book Name" required><br>
+                <label for="book_name">Book Name:</label>
+                <input type="text" id="book_name" name="book_name" class="input-field" placeholder="Book Name" required>
 
-                <label for="author">Author:</label><br>
-                <input type="text" id="author" name="author" placeholder="Author" required><br>
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" class="input-field" placeholder="Author" required>
 
-                <label for="category">Category:</label><br>
-                <input type="text" id="category" name="category" placeholder="Category" required><br>
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" class="input-field" placeholder="Category" required>
 
-                <label for="description">Description:</label><br>
-                <input type="text" id="description" name="description" placeholder="Description" required><br><br>
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" class="input-field" placeholder="Description" required>
 
-                <button type="submit">Add Book</button>
+                <button type="submit" class="button">Add Book</button>
             </form>
         </div>
 
-        <footer>
+        <footer class="footer">
             <p>&copy; 2025 ktaby. All rights reserved.</p>
         </footer>
     </body>

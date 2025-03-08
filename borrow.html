@@ -3,55 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow a Book</title>
+    <title>Borrow Book | ktaby</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Borrow Page Specific Styles */
+        .container {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            width: 80%;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="user_page.html">Home</a></li>
+            <li><a href="view_borrowed.html">Borrowed Books</a></li>
+            <li><a href="borrow.html" class="active">Borrow New Book</a></li>
+            <li><a href="index.html">Log Out</a></li>
+        </ul>
+    </nav>
 
-    <h1>Available Books</h1>
-    <div  class="book-list">
-        <div class="book">
-            <h3>The Great Gatsby</h3>
-            <p>Author: F. Scott Fitzgerald</p>
-            <p class="status available">Available</p>
-            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
-        </div>
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="title">Available Books</h1>
 
-        <div class="book">
-            <h3>1984</h3>
-            <p>Author: George Orwell</p>
-            <p class="status available">Available</p>
-            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
-        </div>
+        <!-- Book List -->
+        <div class="book-list">
+            <div class="book-card">
+                <h3>The Great Gatsby</h3>
+                <p>Author: F. Scott Fitzgerald</p>
+                <p class="status available">Available</p>
+                <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+            </div>
 
-        <div class="book">
-            <h3>To Kill a Mockingbird</h3>
-            <p>Author: Harper Lee</p>
-            <p class="status available">Available</p>
-            <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+            <div class="book-card">
+                <h3>1984</h3>
+                <p>Author: George Orwell</p>
+                <p class="status available">Available</p>
+                <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+            </div>
+
+            <div class="book-card">
+                <h3>To Kill a Mockingbird</h3>
+                <p>Author: Harper Lee</p>
+                <p class="status available">Available</p>
+                <button class="borrow-btn" onclick="borrowBook(this)">Borrow</button>
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 ktaby. All rights reserved.</p>
+    </footer>
+
     <script>
         function borrowBook(button) {
-            let book = button.parentElement;
-            let status = book.querySelector(".status");
+            const bookDiv = button.parentElement;
+            const statusText = bookDiv.querySelector(".status");
 
-            if (status.classList.contains("available")) {
-                status.textContent = "Not Available";
-                status.classList.remove("available");
-                status.classList.add("unavailable");
-                button.disabled = true;
+            statusText.textContent = "Borrowed";
+            statusText.classList.remove("available");
+            statusText.classList.add("unavailable");
 
-                // Store in local storage
-                let borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
-                borrowedBooks.push(book.innerHTML);
-                localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
-
-                alert("Book borrowed successfully!");
-            }
+            button.textContent = "Borrowed";
+            button.disabled = true;
         }
     </script>
+
 </body>
 </html>

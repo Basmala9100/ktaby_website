@@ -8,7 +8,7 @@
     </head>
     <body>
          <!-- Navigation Bar -->
-         <nav id="navbar_manage_admin">
+         <nav class="navbar">
             <ul>
                 <li><a href="admin_page.html">Home</a></li>
                 <li><a href="manage_books.html">Manage Books</a></li>
@@ -17,10 +17,10 @@
             </ul>
         </nav>
 
-        <div class="container_management">
+        <div class="container-management">
             <h2>Book Details</h2>
     
-            <div class="book_details">
+            <div class="book-details">
                 <label>ID:</label>
                 <input type="text" id="bookId" value="Book id" disabled>
     
@@ -42,10 +42,10 @@
                     <option>Yes</option>
                 </select><br><br>
     
-                <button id="editBtn" onclick="enableEditing()">Edit</button>
-                <button id="saveBtn" style="display: none;">Save</button>
+                <button id="editBtn" class="button" onclick="enableEditing()">Edit</button>
+                <button id="saveBtn" class="save-btn">Save</button>
                 <br>
-                <button id="delete_manage" onclick="deleteBook(this)">Delete</button> 
+                <button id="delete_manage" class="delete-btn" onclick="deleteBook(this)">Delete</button> 
             </div>
         </div>
     
@@ -61,7 +61,7 @@
             }
 
             function deleteBook(element) {
-                let bookCard = element.closest(".book-card_admin"); 
+                let bookCard = element.closest(".admin-book-card"); 
                 if (bookCard) {
                     bookCard.remove();
                     alert("Book deleted successfully.");
@@ -69,8 +69,7 @@
             }  
         </script>
     
-
-        <footer>
+        <footer class="footer">
             <p>&copy; 2025 ktaby. All rights reserved.</p>
         </footer>
     </body>
