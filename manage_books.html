@@ -49,26 +49,8 @@
             </div>
         </div>
     
-        <script>
-            function enableEditing() {
-                document.getElementById("bookName").disabled = false;
-                document.getElementById("bookAuthor").disabled = false;
-                document.getElementById("bookCategory").disabled = false;
-                document.getElementById("bookDescription").disabled = false;
-                document.getElementById("bookBorrowed").disabled = false;
-                document.getElementById("editBtn").style.display = "none";
-                document.getElementById("saveBtn").style.display = "inline-block";
-            }
-
-            function deleteBook(element) {
-                let bookCard = element.closest(".admin-book-card"); 
-                if (bookCard) {
-                    bookCard.remove();
-                    alert("Book deleted successfully.");
-                }
-            }  
-        </script>
-    
+        <script src="scripts.js"></script>
+        
         <footer class="footer">
             <p>&copy; 2025 ktaby. All rights reserved.</p>
         </footer>

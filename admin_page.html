@@ -78,27 +78,11 @@
             </div>
         </div>
     </div>
-
-    <!-- JavaScript for Menu Toggle and Deletion -->
-    <script>
-        function toggleMenu(menuId) {
-            let menu = document.getElementById(menuId);
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        function deleteBook(element) {
-            let bookCard = element.closest(".admin-book-card"); 
-            if (bookCard) {
-                bookCard.remove();
-                alert("Book deleted successfully.");
-            }
-        }   
-    </script>
-
+    <script src="scripts.js"></script>
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 ktaby. All rights reserved.</p>
     </footer>
-
+    
 </body>
 </html>
