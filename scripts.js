@@ -98,3 +98,21 @@ function enableEditing() {
     document.getElementById("editBtn").style.display = "none";
     document.getElementById("saveBtn").style.display = "inline-block";
 }
+
+// search book 
+document.getElementById("search-button").addEventListener("click", function()  {
+    let query = document.getElementById("search-bar").value.toLowerCase();
+    let books = document.querySelectorAll(".book-card");
+
+    books.forEach(book => {
+        let title = book.getAttribute("data-title").toLowerCase();
+        let author = book.getAttribute("data-author").toLowerCase();
+        let category = book.getAttribute("data-category").toLowerCase();
+
+        if(title.includes(query) || author.includes(query) || category.includes(query)){
+            book.style.display = "block";
+        }else{
+            book.style.display = "none";
+        }
+    });
+});
