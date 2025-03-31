@@ -134,12 +134,12 @@ body {
     background-size: 20px;
 }
 .search-button {
-    padding: 10px 20px;
+    /*padding: 10px 20px;
     background: #007bff;
     color: white;
     border: none;
-    cursor: pointer;
-    /*display: none;*/
+    cursor: pointer;*/
+    display: none;
 }
 
 /* Featured Books */
@@ -274,4 +274,75 @@ label {
     transform: scale(1.05);
     transition: 0.3s ease-in-out;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode {
+    background-color: #333;
+    color: white;
+}
+
+
+.book-details-container {
+    display: flex;
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Book Cover */
+.book-cover img {
+    width: 200px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Book Info */
+.book-info {
+    margin-left: 30px;
+    flex: 1;
+}
+
+.book-info h1 {
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.book-info p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Borrow Button */
+#borrow-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+#borrow-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    .book-details {
+        flex-direction: column;
+        text-align: center;
+    }
+    .book-cover img {
+        width: 100%;
+        max-width: 300px;
+    }
+    .book-info {
+        margin-left: 0;
+        margin-top: 20px;
+    }
 }

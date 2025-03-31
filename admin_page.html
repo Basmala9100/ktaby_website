@@ -24,14 +24,14 @@
 
         <!-- Search Bar -->
         <div class="search-container">
-            <input type="text" class="search-bar" id="search-bar" placeholder="Search books by title, author, or category...">
+            <input type="text" class="search-bar" placeholder="Search books by title, author, or category...">
             <button class="search-button" onclick="searchBooks()">Search</button>
         </div>
 
         <!-- Books List -->
         <div class="book-list">
             <div class="admin-book-card">
-                <div class="admin-book-info">
+                <div class="admin-book-info" data-title="The Great Gatsby" data-author="F. Scott Fitzgerald" data-category="Classic">
                     <h3>The Great Gatsby</h3>
                     <p>F. Scott Fitzgerald</p>
                     <p>A novel about the American dream and the roaring twenties.</p>
@@ -39,13 +39,13 @@
                 </div>
                 <button class="options-btn" onclick="toggleMenu('menu1')">...</button>
                 <div class="options-menu" id="menu1">
-                    <a href="manage_books.html">View Details</a>
+                    <a href="manage_books.html" onclick="viewBookDetails(this)">View Details</a>
                     <a href="#" onclick="deleteBook(this)">Delete</a>
                 </div>
             </div>
 
             <div class="admin-book-card">
-                <div class="admin-book-info">
+                <div class="admin-book-info" data-title="To Kill a Mockingbird" data-author="Harper Lee" data-category="Classic">
                     <h3>To Kill a Mockingbird</h3>
                     <p>Harper Lee</p>
                     <p>A classic novel about racial injustice and moral growth.</p>
@@ -53,18 +53,13 @@
                 </div>
                 <button class="options-btn" onclick="toggleMenu('menu2')">...</button>
                 <div class="options-menu" id="menu2">
-                    <a href="manage_books.html">View Details</a>
+                    <a href="manage_books.html" onclick="viewBookDetails(this)">View Details</a>
                     <a href="#" onclick="deleteBook(this)">Delete</a>
                 </div>
             </div>
 
             <div class="admin-book-card">
-                <div class="admin-book-info">
-                    <!--
-                    <img src="resources/OIP.jpeg" width=150 height=200>
-                    <div style="display: flex; flex-direction:row; justify-content: space-between;">
-                         </div>
-                        -->
+                <div class="admin-book-info" data-title="1984" data-author="George Orwell" data-category="Dystopian">
                     <h3>1984</h3>
                     <p>George Orwell</p>
                     <p>A dystopian novel about totalitarianism and surveillance.</p>
@@ -72,13 +67,15 @@
                 </div>
                 <button class="options-btn" onclick="toggleMenu('menu3')">...</button>
                 <div class="options-menu" id="menu3">
-                    <a href="manage_books.html">View Details</a>
+                    <a href="manage_books.html" onclick="viewBookDetails(this)">View Details</a>
                     <a href="#" onclick="deleteBook(this)">Delete</a>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="scripts.js"></script>
+
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 ktaby. All rights reserved.</p>

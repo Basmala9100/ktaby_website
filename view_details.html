@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,33 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <h1>hellos</h1>
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="user_page.html">Home</a></li>
+                <li><a href="borrow.html">Borrow New Book</a></li>
+                <li><a href="index.html">Log Out</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Book Details Section -->
+        <div class="book-details-container">
+            <div class="book-cover">
+                <img id="book-image" src="" alt="Book Cover">
+            </div>
+            <div class="book-info">
+                <h2 id="book-title">Book Title</h2>
+                <p><strong>Author:</strong> <span id="book-author"></span></p>
+                <p><strong>Category:</strong> <span id="book-category"></span></p>
+                <p><strong>Description:</strong> <span id="book-description"></span></p>
+                <button id="borrow-btn" class="btn">Borrow</button>
+            </div>
+        </div>
+        
+        <script src="scripts.js"></script>
+
+        <footer class="footer">
+            <p>&copy; 2025 ktaby. All rights reserved.</p>
+        </footer>
     </body>
 </html>
