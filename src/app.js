@@ -5,6 +5,7 @@ import LoginRenderer from './renderers/login-renderer.js';
 import SignupRenderer from './renderers/signup-renderer.js';
 import AdminDashboardRenderer from './renderers/admin-dashboard-renderer.js';
 import UserDashboardRenderer from './renderers/user-dashboard-renderer.js';
+import AddBookRenderer from './renderers/add-book-renderer.js';
 import UsersController from './controllers/users-controller.js';
 
 export default class App {
@@ -18,7 +19,8 @@ export default class App {
             login: new LoginRenderer(this),
             signup: new SignupRenderer(this),
             'admin-dashboard': new AdminDashboardRenderer(this),
-            'user-dashboard': new UserDashboardRenderer(this)
+            'user-dashboard': new UserDashboardRenderer(this),
+            'add-book': new AddBookRenderer(this)
         };
 
         // Bind methods
@@ -89,6 +91,9 @@ export default class App {
                 case 'user-dashboard':
                     this.renderers['user-dashboard'].render(this.container);
                     break;
+                case 'add-book':
+                    this.renderers['add-book'].render(this.container);
+                    break;
                 default:
                     this.renderNotFoundPage();
             }
@@ -118,6 +123,7 @@ export default class App {
                 navItems.innerHTML = `
                     <li><a href="#" data-page="home">Home</a></li>
                     <li><a href="#" data-page="admin-dashboard">Dashboard</a></li>
+                    <li><a href="#" data-page="add-book">Add Book</a></li>
                     <li><a href="#" data-page="logout">Logout</a></li>
                 `;
             } else {
