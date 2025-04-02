@@ -1,6 +1,8 @@
 // src/renderers/admin-dashboard-renderer.js
 import BooksController from '../controllers/books-controller.js';
 import UsersController from '../controllers/users-controller.js';
+import Templates from '../components/templates.js';
+import Utils from '../components/utils.js';
 
 export default class AdminDashboardRenderer {
     constructor(app) {
@@ -19,33 +21,41 @@ export default class AdminDashboardRenderer {
         container.innerHTML = '';
 
         // Create dashboard container
-        const dashboardContainer = document.createElement('div');
-        dashboardContainer.className = 'admin-dashboard';
+        const dashboardContainer = Utils.createElement('div', { class: 'dashboard admin-dashboard' });
 
         // Render dashboard content
         dashboardContainer.innerHTML = `
-            <h1>Admin Dashboard</h1>
-            
-            <section class="admin-controls">
-                <div class="search-container admin-search">
-                    <input type="text" id="admin-search-bar" class="search-bar" 
-                        placeholder="Search books...">
-                </div>
-                <div class="actions">
-                    <button id="add-book-btn" class="btn primary-btn">Add New Book</button>
-                </div>
-            </section>
-            
-            <section class="book-management">
-                <h2>Book Management</h2>
-                <div id="book-count" class="book-count">
-                    Total Books: <span id="total-books">0</span>
-                </div>
+            <div class="container">
+                <h1 class="mb-4">Admin Dashboard</h1>
                 
-                <div id="book-list" class="admin-book-list">
-                    <!-- Books will be dynamically added here -->
-                </div>
-            </section>
+                <section class="card mb-4">
+                    <div class="card__header">
+                        <div class="row">
+                            <div class="col">
+                                <h2 class="card__title">Book Management</h2>
+                            </div>
+                            <div class="col text-right">
+                                <button id="add-book-btn" class="btn btn--primary">Add New Book</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card__body">
+                        <div class="search-container mb-3">
+                            <input type="text" id="admin-search-bar" class="search-bar" 
+                                placeholder="Search books...">
+                        </div>
+                        
+                        <div id="book-count" class="mb-3">
+                            Total Books: <span id="total-books">0</span>
+                        </div>
+                        
+                        <div id="admin-book-list-container">
+                            <!-- Books will be dynamically added here -->
+                        </div>
+                    </div>
+                </section>
+            </div>
         `;
 
         // Render to container
@@ -55,77 +65,67 @@ export default class AdminDashboardRenderer {
         this.renderBookList();
 
         // Setup event listeners
-        this.setupEventListeners();
+        this.setupEventListeners(dashboardContainer);
     }
 
     renderBookList(books = null) {
-        const bookList = document.getElementById('book-list');
+        const bookListContainer = document.getElementById('admin-book-list-container');
         const booksToRender = books || BooksController.getAllBooks();
         
         // Update book count
         document.getElementById('total-books').textContent = booksToRender.length;
-
-        bookList.innerHTML = ''; // Clear existing books
-
+      
+        // Clear existing content
+        bookListContainer.innerHTML = '';
+        
         if (booksToRender.length === 0) {
-            bookList.innerHTML = '<p class="no-books">No books found.</p>';
-            return;
+          bookListContainer.innerHTML = '<p class="no-books">No books found.</p>';
+          return;
         }
-
-        // Render each book
+        
+        // Create a container specifically for admin book cards
+        const adminBookListElement = document.createElement('div');
+        adminBookListElement.className = 'admin-book-list';
+        
+        // Add each book card to the container
         booksToRender.forEach(book => {
-            const bookCard = document.createElement('div');
-            bookCard.className = 'admin-book-card';
-            bookCard.innerHTML = `
-                <div class="admin-book-thumb">
-                    <img src="${book.imageUrl}" alt="${book.title}" class="admin-book-image">
-                </div>
-                <div class="admin-book-info">
-                    <h3>${book.title}</h3>
-                    <p><strong>Author:</strong> ${book.author}</p>
-                    <p><strong>Category:</strong> ${book.category}</p>
-                    <p class="status ${book.isBorrowed ? 'unavailable' : 'available'}">
-                        ${book.isBorrowed ? 'Borrowed' : 'Available'}
-                    </p>
-                </div>
-                <div class="book-actions">
-                    <button class="view-btn" data-book-id="${book.id}">View Details</button>
-                    <button class="edit-btn" data-book-id="${book.id}">Edit</button>
-                    <button class="delete-btn" data-book-id="${book.id}">Delete</button>
-                </div>
-            `;
-
-            bookList.appendChild(bookCard);
+          const bookCardHtml = Templates.bookCard(book, 'admin', true);
+          adminBookListElement.innerHTML += bookCardHtml;
         });
-    }
+        
+        // Append to the main container
+        bookListContainer.appendChild(adminBookListElement);
+      }
 
-    setupEventListeners() {
+    setupEventListeners(container) {
         // Add new book button
-        const addBookBtn = document.getElementById('add-book-btn');
+        const addBookBtn = container.querySelector('#add-book-btn');
         addBookBtn.addEventListener('click', () => {
             this.app.navigateTo('add-book');
         });
 
         // Admin search functionality
-        const searchBar = document.getElementById('admin-search-bar');
-        searchBar.addEventListener('input', this.handleSearch.bind(this));
+        const searchBar = container.querySelector('#admin-search-bar');
+        const debouncedSearch = Utils.debounce(this.handleSearch.bind(this), 300);
+        searchBar.addEventListener('input', debouncedSearch);
 
-        // Setup delegation for book actions
-        const bookList = document.getElementById('book-list');
-        bookList.addEventListener('click', (event) => {
-            const target = event.target;
+        // Book action buttons using event delegation
+        Utils.delegate(container, 'click', '[data-action]', (event) => {
+            const action = event.target.dataset.action;
+            const bookId = event.target.dataset.bookId;
             
-            // Get book ID from clicked element
-            const bookId = target.dataset.bookId;
             if (!bookId) return;
             
-            // Handle different actions
-            if (target.classList.contains('view-btn')) {
-                this.app.navigateTo('details', { bookId });
-            } else if (target.classList.contains('edit-btn')) {
-                this.app.navigateTo('edit-book', { bookId });
-            } else if (target.classList.contains('delete-btn')) {
-                this.handleDeleteBook(bookId);
+            switch (action) {
+                case 'view':
+                    this.app.navigateTo('details', { bookId });
+                    break;
+                case 'edit':
+                    this.app.navigateTo('edit-book', { bookId });
+                    break;
+                case 'delete':
+                    this.handleDeleteBook(bookId);
+                    break;
             }
         });
     }
@@ -148,11 +148,13 @@ export default class AdminDashboardRenderer {
             const deleteResult = BooksController.deleteBook(bookId);
             
             if (deleteResult.success) {
-                alert('Book deleted successfully');
+                // Show notification
+                Utils.showNotification('Book deleted successfully', 'success', 3000);
+                
                 // Re-render book list
                 this.renderBookList();
             } else {
-                alert('Failed to delete book');
+                Utils.showNotification('Failed to delete book', 'danger', 3000);
             }
         }
     }

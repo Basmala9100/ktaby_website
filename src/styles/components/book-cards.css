@@ -55,6 +55,9 @@
     border-radius: 15px;
     font-size: var(--font-size-sm);
     margin: var(--spacing-xs) 0;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
   }
   
   /* Book Status */
@@ -64,6 +67,7 @@
     border-radius: 15px;
     font-size: var(--font-size-sm);
     margin: var(--spacing-sm) 0;
+    align-self: flex-start;
   }
   
   .book-card__status--available {
@@ -84,29 +88,42 @@
   
   /* Admin Book Card Variant */
   .book-card--admin {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    grid-gap: var(--spacing-md);
+    align-items: center;
     width: 100%;
     max-width: 800px;
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
+    padding: var(--spacing-md);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    transition: transform var(--transition-normal), 
+                box-shadow var(--transition-normal);
+    margin-bottom: var(--spacing-md);
   }
-  
+  .book-card--admin:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-lg);
+  }
   .book-card--admin .book-card__image {
-    width: 80px;
-    height: 120px;
-    margin: 0 var(--spacing-md) 0 0;
-  }
+  grid-column: 1;
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin: 0;
+}
   
   .book-card--admin .book-card__content {
-    flex: 1;
-  }
-  
-  .book-card--admin .book-card__actions {
+    grid-column: 2;
+    text-align: left;
+    padding-right: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
-    margin-left: var(--spacing-md);
+    gap: var(--spacing-xs);
   }
+  
   
   /* Borrowed Book Card */
   .book-card--borrowed {
@@ -195,9 +212,12 @@
     }
     
     .book-card--admin .book-card__actions {
-      flex-direction: row;
-      margin-top: var(--spacing-md);
-      margin-left: 0;
+        grid-column: 3;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        justify-content: center;
+        min-width: 120px;
     }
   
     .book-details-container {

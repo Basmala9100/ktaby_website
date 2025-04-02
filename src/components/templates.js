@@ -33,75 +33,74 @@ const Templates = {
      * @returns {string} Book card HTML
      */
     bookCard(book, variant = 'default', includeActions = true) {
-      // Determine status class
-      const statusClass = book.isBorrowed 
+        // Determine status class
+        const statusClass = book.isBorrowed 
         ? 'book-card__status--borrowed' 
         : 'book-card__status--available';
-      
-      // Determine card class based on variant
-      const cardClass = variant === 'default' 
+
+        // Determine card class based on variant
+        const cardClass = variant === 'default' 
         ? 'book-card' 
         : `book-card book-card--${variant}`;
-      
-      // Generate actions based on variant and whether to include them
-      let actionsHtml = '';
-      
-      if (includeActions) {
+
+        // Generate actions based on variant and whether to include them
+        let actionsHtml = '';
+
+        if (includeActions) {
         if (variant === 'admin') {
-          actionsHtml = `
+            actionsHtml = `
             <div class="book-card__actions">
-              <button class="btn btn--info" data-action="view" data-book-id="${book.id}">View Details</button>
-              <button class="btn btn--warning" data-action="edit" data-book-id="${book.id}">Edit</button>
-              <button class="btn btn--danger" data-action="delete" data-book-id="${book.id}">Delete</button>
+                <button class="btn btn--info" data-action="view" data-book-id="${book.id}">View Details</button>
+                <button class="btn btn--warning" data-action="edit" data-book-id="${book.id}">Edit</button>
+                <button class="btn btn--danger" data-action="delete" data-book-id="${book.id}">Delete</button>
             </div>
-          `;
+            `;
         } else if (variant === 'borrowed') {
-          actionsHtml = `
+            actionsHtml = `
             <div class="book-card__actions">
-              <button class="btn btn--danger" data-action="return" data-book-id="${book.id}">Return Book</button>
+                <button class="btn btn--danger" data-action="return" data-book-id="${book.id}">Return Book</button>
             </div>
-          `;
+            `;
         } else {
-          actionsHtml = `
+            actionsHtml = `
             <div class="book-card__actions">
-              <a href="#" class="btn btn--primary" data-page="details" data-book-id="${book.id}">View Details</a>
+                <a href="#" class="btn btn--primary" data-page="details" data-book-id="${book.id}">View Details</a>
             </div>
-          `;
+            `;
         }
-      }
-      
-      // Generate HTML based on variant
-      if (variant === 'admin') {
+        }
+
+        // Generate status text
+        const statusText = book.isBorrowed ? 'Borrowed' : 'Available';
+
+        // Create a unified card structure for all variants
+        if (variant === 'admin') {
         return `
-          <div class="${cardClass}" data-book-id="${book.id}">
+            <div class="${cardClass}" data-book-id="${book.id}">
             <img src="${book.imageUrl}" alt="${book.title}" class="book-card__image">
             <div class="book-card__content">
-              <h3 class="book-card__title">${book.title}</h3>
-              <p class="book-card__author"><strong>Author:</strong> ${book.author}</p>
-              <p><strong>Category:</strong> <span class="book-card__category">${book.category}</span></p>
-              <p class="book-card__status ${statusClass}">
-                ${book.isBorrowed ? 'Borrowed' : 'Available'}
-              </p>
+                <h3 class="book-card__title">${book.title}</h3>
+                <p class="book-card__author"><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Category:</strong> <span class="book-card__category">${book.category}</span></p>
+                <p class="book-card__status ${statusClass}">${statusText}</p>
             </div>
             ${actionsHtml}
-          </div>
+            </div>
         `;
-      } else {
+        } else {
         return `
-          <div class="${cardClass}" data-book-id="${book.id}">
+            <div class="${cardClass}" data-book-id="${book.id}">
             <img src="${book.imageUrl}" alt="${book.title}" class="book-card__image">
             <div class="book-card__content">
-              <h3 class="book-card__title">${book.title}</h3>
-              <p class="book-card__author">By ${book.author}</p>
-              <p class="book-card__category">${book.category}</p>
-              <p class="book-card__status ${statusClass}">
-                ${book.isBorrowed ? 'Borrowed' : 'Available'}
-              </p>
-              ${actionsHtml}
+                <h3 class="book-card__title">${book.title}</h3>
+                <p class="book-card__author">By ${book.author}</p>
+                <p class="book-card__category">${book.category}</p>
+                <p class="book-card__status ${statusClass}">${statusText}</p>
+                ${actionsHtml}
             </div>
-          </div>
+            </div>
         `;
-      }
+        }
     },
   
     /**

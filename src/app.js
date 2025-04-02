@@ -7,6 +7,8 @@ import AdminDashboardRenderer from './renderers/admin-dashboard-renderer.js';
 import UserDashboardRenderer from './renderers/user-dashboard-renderer.js';
 import AddBookRenderer from './renderers/add-book-renderer.js';
 import UsersController from './controllers/users-controller.js';
+import Templates from './components/templates.js';
+import Utils from './components/utils.js';
 
 export default class App {
     constructor(container) {
@@ -18,15 +20,12 @@ export default class App {
             details: new DetailsRenderer(this),
             login: new LoginRenderer(this),
             signup: new SignupRenderer(this),
-            //Declared as string because '-' is reservered in JS
             'admin-dashboard': new AdminDashboardRenderer(this), 
             'user-dashboard': new UserDashboardRenderer(this),
             'add-book': new AddBookRenderer(this)
         };
 
-        // Bind methods
-        // this is because these methods are used as callbacks which means that this will be lost
-        // when the method is called, so we need to bind them to the current instance of the class
+        // Bind methods to preserve 'this' context when used as callbacks
         this.navigateTo = this.navigateTo.bind(this);
         this.setupNavigation = this.setupNavigation.bind(this);
         this.updateNavbar = this.updateNavbar.bind(this);
@@ -45,35 +44,35 @@ export default class App {
     }
 
     setupNavigation() {
-        // Add click event listeners to navbar links
+        // Add click event listeners to navbar links using delegation
         const navbar = document.getElementById('main-navbar');
-        //we define a click event listener on the navbar(all of it)
-        // we identify clicked event using the event's target.closest method. This reduces memory
-        // usage and improves performance by not adding individual event listeners to each link
-        // this is a common pattern in event delegation
-        navbar.addEventListener('click', (event) => {
-            // get the attribute containing which page to go to for the clicked element.
-            const pageLink = event.target.closest('[data-page]');
         
-            if (pageLink) { // check if the clicked element has the data-page attribute
-                event.preventDefault(); // stop browser's default action
-                const pageName = pageLink.dataset.page; // get the page link
-                const params = Object.assign({}, pageLink.dataset);
-                delete params.page; // Remove page from params
+        Utils.delegate(navbar, 'click', '[data-page]', (event) => {
+            event.preventDefault();
+            
+            const pageName = event.target.dataset.page;
+            const params = {...event.target.dataset};
+            delete params.page; // Remove page from params
 
-                // Handle logout
-                if (pageName === 'logout') {
-                    this.handleLogout();
-                    return;
-                }
-
-                this.navigateTo(pageName, params);
+            // Handle logout
+            if (pageName === 'logout') {
+                this.handleLogout();
+                return;
             }
+
+            this.navigateTo(pageName, params);
         });
+        
+        // Mobile menu toggle for responsive design
+        const navbarToggle = navbar.querySelector('.navbar__toggle');
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', () => {
+                navbarToggle.classList.toggle('is-active');
+                navbar.querySelector('.navbar__links').classList.toggle('is-open');
+            });
+        }
     }
-    // remember that binding this method to the class instance is important
-    // because this method is used as a callback for the click event listener
-    // and we need to make sure that this refers to the class instance when the method is called
+
     navigateTo(pageName, params = {}) {
         try {
             // Clear previous content
@@ -111,6 +110,16 @@ export default class App {
 
             // Update navbar after navigation
             this.updateNavbar();
+            
+            // Update active nav link
+            this.updateActiveNavLink(pageName);
+            
+            // Close mobile menu if open
+            const navbarLinks = document.querySelector('.navbar__links');
+            if (navbarLinks && navbarLinks.classList.contains('is-open')) {
+                navbarLinks.classList.remove('is-open');
+                document.querySelector('.navbar__toggle')?.classList.remove('is-active');
+            }
         } catch (error) {
             console.error('Navigation error:', error);
             this.renderErrorPage(error);
@@ -119,72 +128,67 @@ export default class App {
 
     updateNavbar() {
         const navbar = document.getElementById('main-navbar');
-        const navItems = navbar.querySelector('ul');
         
-        // Clear existing items
-        navItems.innerHTML = '';
-
-        // Get current user (From the controller)
+        // Get current user
         const currentUser = UsersController.getCurrentUser();
-
-        if (currentUser) {
-            // User is logged in
-            if (currentUser.userType === 'admin') {
-                // Admin navigation
-                navItems.innerHTML = `
-                    <li><a href="#" data-page="home">Home</a></li>
-                    <li><a href="#" data-page="admin-dashboard">Dashboard</a></li>
-                    <li><a href="#" data-page="add-book">Add Book</a></li>
-                    <li><a href="#" data-page="logout">Logout</a></li>
-                `;
-            } else {
-                // Regular user navigation
-                navItems.innerHTML = `
-                    <li><a href="#" data-page="home">Home</a></li>
-                    <li><a href="#" data-page="user-dashboard">My Books</a></li>
-                    <li><a href="#" data-page="logout">Logout</a></li>
-                `;
-            }
-        } else {
-            // No user logged in
-            navItems.innerHTML = `
-                <li><a href="#" data-page="home">Home</a></li>
-                <li><a href="#" data-page="signup">Sign Up</a></li>
-                <li><a href="#" data-page="login">Log In</a></li>
-            `;
+        
+        // Render navbar with current user state
+        navbar.innerHTML = Templates.navbar(currentUser);
+        
+        // Re-setup toggle functionality after navbar update
+        const navbarToggle = navbar.querySelector('.navbar__toggle');
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', () => {
+                navbarToggle.classList.toggle('is-active');
+                navbar.querySelector('.navbar__links').classList.toggle('is-open');
+            });
+        }
+    }
+    
+    updateActiveNavLink(pageName) {
+        // Remove active class from all links
+        document.querySelectorAll('.navbar__link').forEach(link => {
+            link.classList.remove('navbar__link--active');
+        });
+        
+        // Add active class to current page link
+        const activeLink = document.querySelector(`.navbar__link[data-page="${pageName}"]`);
+        if (activeLink) {
+            activeLink.classList.add('navbar__link--active');
         }
     }
 
     handleLogout() {
         // Perform logout
         UsersController.logout();
+        
+        // Show notification
+        Utils.showNotification('Logged out successfully', 'success', 2000);
 
         // Navigate to home page
         this.navigateTo('home');
     }
 
     renderNotFoundPage() {
-        const notFoundContainer = document.createElement('div');
-        notFoundContainer.className = 'not-found';
+        const notFoundContainer = Utils.createElement('div', { class: 'not-found container' });
         notFoundContainer.innerHTML = `
             <h2>404 - Page Not Found</h2>
             <p>The page you are looking for does not exist.</p>
-            <button id="home-btn" class="btn">Go to Home</button>
+            <button id="home-btn" class="btn btn--primary">Go to Home</button>
         `;
-        // using querySelector to get the button element but we can also use getElementById
+        
         const homeBtn = notFoundContainer.querySelector('#home-btn');
-        //const homeBtn = notFoundContainer.getElementById('home-btn'); 
         homeBtn.addEventListener('click', () => this.navigateTo('home'));
+        
         this.container.appendChild(notFoundContainer);
     }
 
     renderErrorPage(error) {
-        const errorContainer = document.createElement('div');
-        errorContainer.className = 'error-page';
+        const errorContainer = Utils.createElement('div', { class: 'error-page container' });
         errorContainer.innerHTML = `
             <h2>An Error Occurred</h2>
             <p>${error.message}</p>
-            <button id="home-btn" class="btn">Go to Home</button>
+            <button id="home-btn" class="btn btn--primary">Go to Home</button>
         `;
 
         const homeBtn = errorContainer.querySelector('#home-btn');
@@ -195,8 +199,6 @@ export default class App {
 }
 
 // Initialize the app when the DOM is fully loaded
-// This is done through the DOMContentLoaded event
-// This event is fired when the initial HTML document has been completely loaded
 document.addEventListener('DOMContentLoaded', () => {
     const appContainer = document.getElementById('app-container');
     const app = new App(appContainer);

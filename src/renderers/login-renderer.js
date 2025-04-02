@@ -1,5 +1,7 @@
-
+// src/renderers/login-renderer.js
 import UsersController from '../controllers/users-controller.js';
+import Templates from '../components/templates.js';
+import Utils from '../components/utils.js';
 
 export default class LoginRenderer {
     constructor(app) {
@@ -11,55 +13,101 @@ export default class LoginRenderer {
         container.innerHTML = '';
 
         // Create login container
-        const loginContainer = document.createElement('div');
-        loginContainer.className = 'centered-section';
-        loginContainer.innerHTML = `
-            <h2 class="title">Log In</h2>
-            <form id='login-form'>
-                <label for="username">Username</label><br>
-                <input type="text" class="input-field" id="username" name="username" placeholder="Username" required><br>
-
-                <label for="password">Password</label><br>
-                <input type="password" class="input-field" id="password" name="password" placeholder="Password" required><br><br>
+        const loginContainer = Utils.createElement('div', { class: 'form-container' });
+        
+        // Build login form using templates
+        const formContent = `
+            <h2 class="form-title">Log In</h2>
+            <form id="login-form">
+                ${Templates.formInput('username', 'Username', 'text', true, 'Enter your username')}
+                ${Templates.formInput('password', 'Password', 'password', true, 'Enter your password')}
                 
-                <button type="submit" class="button">Login</button>
+                <div class="form-actions">
+                    ${Templates.button('Log In', 'primary', 'login-button', { type: 'submit' })}
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <p>Don't have an account? <a href="#" data-page="signup">Sign up</a></p>
+                </div>
             </form>
         `;
-
-        // Add form submission handler
-        const loginForm = loginContainer.querySelector('#login-form');
-        loginForm.addEventListener('submit', this.handleLogin.bind(this));
-
-        // Render to container
+        
+        loginContainer.innerHTML = formContent;
+        
+        // Append to main container
         container.appendChild(loginContainer);
+        
+        // Setup event handlers
+        this.setupEventHandlers(loginContainer);
     }
-
+    
+    setupEventHandlers(container) {
+        // Form submission
+        const loginForm = container.querySelector('#login-form');
+        
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.handleLogin(event);
+        });
+        
+        // Signup link
+        Utils.delegate(container, 'click', '[data-page="signup"]', (event) => {
+            event.preventDefault();
+            this.app.navigateTo('signup');
+        });
+    }
+    
     handleLogin(event) {
-        event.preventDefault();
-
-        const usernameInput = event.target.querySelector('#username');
-        const passwordInput = event.target.querySelector('#password');
-
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value;
-
+        // Get form values
+        const form = event.target;
+        const username = form.querySelector('#username').value.trim();
+        const password = form.querySelector('#password').value;
+        
+        // Validate input
+        if (!username || !password) {
+            this.showFormError(form, 'Username and password are required');
+            return;
+        }
+        
         // Attempt login
         const loginResult = UsersController.login(username, password);
-
+        
         if (loginResult.success) {
-            // Determine user type and navigate accordingly
+            // Show success message
+            Utils.showNotification('Login successful!', 'success', 2000);
+            
+            // Determine destination based on user type
             const userType = loginResult.user.userType;
             
             if (userType === 'admin') {
-                // Navigate to admin dashboard
                 this.app.navigateTo('admin-dashboard');
             } else {
-                // Navigate to user dashboard
                 this.app.navigateTo('user-dashboard');
             }
         } else {
             // Show error message
-            alert(loginResult.error);
+            this.showFormError(form, loginResult.error);
         }
+    }
+    
+    showFormError(form, errorMessage) {
+        // Clear any existing error
+        let errorElement = form.querySelector('.form-error');
+        
+        if (!errorElement) {
+            // Create error element if it doesn't exist
+            errorElement = Utils.createElement('div', {
+                class: 'form-error alert alert-danger mt-3'
+            });
+            form.insertBefore(errorElement, form.querySelector('.form-actions'));
+        }
+        
+        // Set error message
+        errorElement.textContent = errorMessage;
+        
+        // Highlight input fields
+        form.querySelectorAll('.form-control').forEach(input => {
+            input.classList.add('is-invalid');
+        });
     }
 }

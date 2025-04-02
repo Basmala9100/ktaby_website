@@ -1,6 +1,8 @@
 // src/renderers/add-book-renderer.js
 import BooksController from '../controllers/books-controller.js';
 import UsersController from '../controllers/users-controller.js';
+import Templates from '../components/templates.js';
+import Utils from '../components/utils.js';
 
 export default class AddBookRenderer {
     constructor(app) {
@@ -19,39 +21,23 @@ export default class AddBookRenderer {
         container.innerHTML = '';
 
         // Create add book container
-        const addBookContainer = document.createElement('div');
-        addBookContainer.className = 'container-management';
+        const addBookContainer = Utils.createElement('div', { class: 'container-management' });
 
         // Render form content
         addBookContainer.innerHTML = `
-            <h2>Add New Book</h2>
+            <h2 class="form-title">Add New Book</h2>
             
             <form id="add-book-form">
-                <div class="form-group">
-                    <label for="title">Title*</label>
-                    <input type="text" id="title" class="input-field" required>
-                </div>
+                ${Templates.formInput('title', 'Title*', 'text', true)}
+                ${Templates.formInput('author', 'Author*', 'text', true)}
+                ${Templates.formInput('category', 'Category*', 'text', true)}
+                ${Templates.textarea('description', 'Description*', true, 'Enter book description')}
                 
                 <div class="form-group">
-                    <label for="author">Author*</label>
-                    <input type="text" id="author" class="input-field" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="category">Category*</label>
-                    <input type="text" id="category" class="input-field" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description*</label>
-                    <textarea id="description" class="input-field textarea" rows="4" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="imageUrl">Image URL*</label>
-                    <input type="url" id="imageUrl" class="input-field" 
+                    <label for="imageUrl" class="form-label">Image URL*</label>
+                    <input type="url" id="imageUrl" class="form-control" 
                            placeholder="https://example.com/image.jpg" required>
-                    <p class="input-help">Enter a valid URL for the book cover image</p>
+                    <p class="form-text">Enter a valid URL for the book cover image</p>
                 </div>
                 
                 <div class="image-preview-container">
@@ -61,9 +47,9 @@ export default class AddBookRenderer {
                     </div>
                 </div>
                 
-                <div class="form-buttons">
-                    <button type="submit" class="button" id="save-book-btn">Add Book</button>
-                    <button type="button" class="button cancel-btn" id="cancel-btn">Cancel</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" id="save-book-btn">Add Book</button>
+                    <button type="button" class="btn btn--secondary" id="cancel-btn">Cancel</button>
                 </div>
             </form>
         `;
@@ -72,22 +58,22 @@ export default class AddBookRenderer {
         container.appendChild(addBookContainer);
 
         // Setup event listeners
-        this.setupEventListeners();
+        this.setupEventListeners(addBookContainer);
     }
 
-    setupEventListeners() {
+    setupEventListeners(container) {
         // Form submission handler
-        const form = document.getElementById('add-book-form');
+        const form = container.querySelector('#add-book-form');
         form.addEventListener('submit', this.handleAddBook.bind(this));
 
         // Cancel button
-        const cancelBtn = document.getElementById('cancel-btn');
+        const cancelBtn = container.querySelector('#cancel-btn');
         cancelBtn.addEventListener('click', () => {
             this.app.navigateTo('admin-dashboard');
         });
 
         // Image preview handler
-        const imageUrlInput = document.getElementById('imageUrl');
+        const imageUrlInput = container.querySelector('#imageUrl');
         imageUrlInput.addEventListener('input', this.handleImagePreview.bind(this));
         imageUrlInput.addEventListener('paste', this.handleImagePreview.bind(this));
     }
@@ -96,28 +82,22 @@ export default class AddBookRenderer {
         event.preventDefault();
 
         // Get form data
-        const titleInput = document.getElementById('title');
-        const authorInput = document.getElementById('author');
-        const categoryInput = document.getElementById('category');
-        const descriptionInput = document.getElementById('description');
-        const imageUrlInput = document.getElementById('imageUrl');
-
-        // Get trimmed values
-        const title = titleInput.value.trim();
-        const author = authorInput.value.trim();
-        const category = categoryInput.value.trim();
-        const description = descriptionInput.value.trim();
-        const imageUrl = imageUrlInput.value.trim();
+        const form = event.target;
+        const title = form.querySelector('#title').value.trim();
+        const author = form.querySelector('#author').value.trim();
+        const category = form.querySelector('#category').value.trim();
+        const description = form.querySelector('#description').value.trim();
+        const imageUrl = form.querySelector('#imageUrl').value.trim();
 
         // Validate inputs
         if (!title || !author || !category || !description || !imageUrl) {
-            alert('All fields are required');
+            Utils.showNotification('All fields are required', 'danger', 3000);
             return;
         }
 
         // Validate image URL
-        if (!this.isValidUrl(imageUrl)) {
-            alert('Please enter a valid image URL');
+        if (!Utils.isValidUrl(imageUrl)) {
+            Utils.showNotification('Please enter a valid image URL', 'danger', 3000);
             return;
         }
 
@@ -131,10 +111,10 @@ export default class AddBookRenderer {
         });
 
         if (createResult.success) {
-            alert('Book added successfully');
+            Utils.showNotification('Book added successfully', 'success', 3000);
             this.app.navigateTo('admin-dashboard');
         } else {
-            alert(`Failed to add book: ${createResult.error}`);
+            Utils.showNotification(`Failed to add book: ${createResult.error}`, 'danger', 3000);
         }
     }
 
@@ -142,7 +122,7 @@ export default class AddBookRenderer {
         const imageUrl = document.getElementById('imageUrl').value.trim();
         const imagePreview = document.getElementById('image-preview');
 
-        if (imageUrl && this.isValidUrl(imageUrl)) {
+        if (imageUrl && Utils.isValidUrl(imageUrl)) {
             // Display image preview
             imagePreview.innerHTML = `
                 <img src="${imageUrl}" alt="Book cover preview" class="preview-image">
@@ -152,15 +132,6 @@ export default class AddBookRenderer {
             imagePreview.innerHTML = `
                 <p class="no-preview">Enter a valid URL to see preview</p>
             `;
-        }
-    }
-
-    isValidUrl(url) {
-        try {
-            new URL(url);
-            return true;
-        } catch (e) {
-            return false;
         }
     }
 }

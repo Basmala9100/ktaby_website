@@ -1,6 +1,7 @@
-
 // src/renderers/signup-renderer.js
 import UsersController from '../controllers/users-controller.js';
+import Templates from '../components/templates.js';
+import Utils from '../components/utils.js';
 
 export default class SignupRenderer {
     constructor(app) {
@@ -12,71 +13,100 @@ export default class SignupRenderer {
         container.innerHTML = '';
 
         // Create signup container
-        const signupContainer = document.createElement('div');
-        signupContainer.className = 'centered-section';
-        signupContainer.innerHTML = `
-            <h2 class="title">Sign Up</h2>
+        const signupContainer = Utils.createElement('div', { class: 'form-container' });
+        
+        // Build signup form using templates
+        const formContent = `
+            <h2 class="form-title">Sign Up</h2>
             <form id="signup-form">
-                <label for="username">UserName</label><br>
-                <input type="text" class="input-field" id="signup-username" placeholder="Username" required><br>
-
-                <label for="email">Email</label><br>
-                <input type="email" class="input-field" id="signup-email" placeholder="Email" required><br>
-
-                <label for="password">Password</label><br>
-                <input type="password" class="input-field" id="signup-password" placeholder="Password" required><br>
+                ${Templates.formInput('signup-username', 'Username', 'text', true, 'Choose a username')}
+                ${Templates.formInput('signup-email', 'Email', 'email', true, 'Enter your email')}
+                ${Templates.formInput('signup-password', 'Password', 'password', true, 'Choose a password')}
+                ${Templates.formInput('signup-confirm-password', 'Confirm Password', 'password', true, 'Confirm your password')}
                 
-                <label for="password-confirm">Confirm Password</label><br>
-                <input type="password" class="input-field" id="signup-confirm-password" placeholder="Confirm Password" required><br>
+                <div class="form-group">
+                    <label class="form-label">User Type</label>
+                    <div class="form-check">
+                        <input type="radio" id="user" name="userType" value="user" class="form-check-input" checked>
+                        <label for="user" class="form-check-label">User</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" id="admin" name="userType" value="admin" class="form-check-input">
+                        <label for="admin" class="form-check-label">Admin</label>
+                    </div>
+                </div>
                 
-                <label>User Type</label><br>
-                <input type="radio" id="admin" name="is_admin" value="admin">
-                <label for="admin">Admin</label><br>
-                <input type="radio" id="user" name="is_admin" value="user">
-                <label for="user">User</label><br><br>
-
-                <button type="submit" class="button">Sign Up</button>
+                <div class="form-actions">
+                    ${Templates.button('Sign Up', 'primary', 'signup-button', { type: 'submit' })}
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <p>Already have an account? <a href="#" data-page="login">Log in</a></p>
+                </div>
             </form>
         `;
-
-        // Add form submission handler
-        const signupForm = signupContainer.querySelector('#signup-form');
-        signupForm.addEventListener('submit', this.handleSignup.bind(this));
-
-        // Render to container
+        
+        signupContainer.innerHTML = formContent;
+        
+        // Append to main container
         container.appendChild(signupContainer);
+        
+        // Setup event handlers
+        this.setupEventHandlers(signupContainer);
     }
-
+    
+    setupEventHandlers(container) {
+        // Form submission
+        const signupForm = container.querySelector('#signup-form');
+        
+        signupForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.handleSignup(event);
+        });
+        
+        // Login link
+        Utils.delegate(container, 'click', '[data-page="login"]', (event) => {
+            event.preventDefault();
+            this.app.navigateTo('login');
+        });
+    }
+    
     handleSignup(event) {
-        event.preventDefault();
-
-        // Get form inputs
-        const usernameInput = event.target.querySelector('#signup-username');
-        const emailInput = event.target.querySelector('#signup-email');
-        const passwordInput = event.target.querySelector('#signup-password');
-        const confirmPasswordInput = event.target.querySelector('#signup-confirm-password');
-        const userTypeInputs = event.target.querySelectorAll('input[name="is_admin"]');
-
-        // Validate inputs
-        const username = usernameInput.value.trim();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        // Check password match
+        // Get form values
+        const form = event.target;
+        const username = form.querySelector('#signup-username').value.trim();
+        const email = form.querySelector('#signup-email').value.trim();
+        const password = form.querySelector('#signup-password').value;
+        const confirmPassword = form.querySelector('#signup-confirm-password').value;
+        const userTypeInput = form.querySelector('input[name="userType"]:checked');
+        
+        // Basic validation
+        if (!username || !email || !password || !confirmPassword) {
+            this.showFormError(form, 'All fields are required');
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.showFormError(form, 'Please enter a valid email address');
+            return;
+        }
+        
+        // Password match validation
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            this.showFormError(form, 'Passwords do not match');
             return;
         }
-
-        // Get selected user type
-        const userTypeSelected = Array.from(userTypeInputs).find(input => input.checked);
-        if (!userTypeSelected) {
-            alert("Please select a user type!");
+        
+        // User type validation
+        if (!userTypeInput) {
+            this.showFormError(form, 'Please select a user type');
             return;
         }
-        const userType = userTypeSelected.value;
-
+        
+        const userType = userTypeInput.value;
+        
         // Attempt signup
         const signupResult = UsersController.signup({
             username,
@@ -84,14 +114,32 @@ export default class SignupRenderer {
             password,
             userType
         });
-
+        
         if (signupResult.success) {
-            // Navigate to login page or directly log in
+            // Show success message
+            Utils.showNotification('Signup successful! Please log in.', 'success', 3000);
+            
+            // Navigate to login page
             this.app.navigateTo('login');
-            alert("Signup successful! Please log in.");
         } else {
             // Show error message
-            alert(signupResult.error);
+            this.showFormError(form, signupResult.error);
         }
+    }
+    
+    showFormError(form, errorMessage) {
+        // Clear any existing error
+        let errorElement = form.querySelector('.form-error');
+        
+        if (!errorElement) {
+            // Create error element if it doesn't exist
+            errorElement = Utils.createElement('div', {
+                class: 'form-error alert alert-danger mt-3'
+            });
+            form.insertBefore(errorElement, form.querySelector('.form-actions'));
+        }
+        
+        // Set error message
+        errorElement.textContent = errorMessage;
     }
 }
