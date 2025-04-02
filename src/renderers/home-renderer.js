@@ -107,15 +107,14 @@ export default class HomeRenderer {
     }
 
     setupSearchFunctionality(homeContainer) {
+        // WE COULD USE getELementById BUT querySelector IS MORE FLEXIBLE
         const searchInput = homeContainer.querySelector('#search-bar');
         const searchButton = homeContainer.querySelector('#search-button');
         const clearSearchButton = homeContainer.querySelector('#clear-search');
         const bookList = homeContainer.querySelector('#book-list');
         const searchResults = homeContainer.querySelector('#search-results');
         
-        // Debounce function to prevent too many searches while typing
-        // This is a common pattern to improve performance 
-        // and avoid unnecessary API (or function) calls
+        // Debounce function to prevent searching on EVERY KEY STROKE.
         const debounce = (func, delay) => { 
             let timeoutId;
             return function() {
@@ -143,7 +142,7 @@ export default class HomeRenderer {
                 // Show clear search button
                 clearSearchButton.style.display = 'inline-block';
                 
-                // Render search results
+                // Render search results using the returned books from the controller
                 this.renderBooks(bookList, searchResults);
             } else {
                 // If search is empty, show all books

@@ -1,5 +1,15 @@
-// controllers/books-controller.js
-
+/* Some important notes:
+- The `BooksController` class is responsible for managing the books in the application.
+- It provides methods to create, read, update, delete, and search for books.
+- Books are currently stored in the browser's local storage for simplicity.
+- In phase 3 this controller will be replaced with a server-side implementation using django.
+- In pahse 3 we will also use an api and switch the rendering on the client side to use API calls
+insted of function calls
+- We'll also make a database to presist books and update it using the API.
+- Search functionality currently works on the client side and uses the availaility of books on memory
+but in phase 3 we'll use the API to search for books and we'll have a search index for books
+like lucene or elasticsearch.
+*/
 class BooksController {
     // Key for storing books in local storage
     static STORAGE_KEY = 'ktaby_books';
@@ -27,7 +37,7 @@ class BooksController {
             borrowedBy: null
         }
     ];
-    
+
     static getAllBooks() {
         let books = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
         
@@ -47,11 +57,7 @@ class BooksController {
         return Date.now().toString() + Math.random().toString(36).substr(2, 9);
     }
 
-    /**
-     * Create a new book
-     * @param {Object} bookData - Book data to create
-     * @returns {Object} Created book or error
-     */
+
     static createBook(bookData) {
         // Validate input
         if (!bookData.title || !bookData.author) {
@@ -93,22 +99,11 @@ class BooksController {
         };
     }
 
-    /**
-     * Find a book by ID
-     * @param {string} bookId 
-     * @returns {Object|null} Found book or null
-     */
     static findBookById(bookId) {
         const books = this.getAllBooks();
         return books.find(book => book.id === bookId);
     }
 
-    /**
-     * Update an existing book
-     * @param {string} bookId 
-     * @param {Object} updatedData 
-     * @returns {Object} Update result
-     */
     static updateBook(bookId, updatedData) {
         const books = this.getAllBooks();
         const bookIndex = books.findIndex(book => book.id === bookId);
@@ -234,7 +229,7 @@ class BooksController {
     static searchBooks(query) {
         const books = this.getAllBooks();
         const lowercaseQuery = query.toLowerCase();
-
+        // Filter books based on title, author, or category
         return books.filter(book => 
             book.title.toLowerCase().includes(lowercaseQuery) ||
             book.author.toLowerCase().includes(lowercaseQuery) ||
