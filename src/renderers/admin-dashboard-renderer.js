@@ -144,10 +144,10 @@ Utils.delegate(container, 'click', '.book-card__menu-trigger', (event) => {
 
       switch (action) {
         case "view":
-          this.app.navigateTo("details", { bookId });
+          this.app.navigateTo("details", { bookId },true);
           break;
         case "edit":
-          this.app.navigateTo("edit-book", { bookId });
+          this.app.navigateTo("edit-book", { bookId },true);
           break;
         case "delete":
           this.handleDeleteBook(bookId);
@@ -184,7 +184,43 @@ Utils.delegate(container, 'click', '.book-card__menu-trigger', (event) => {
       this.renderBookList();
     }
   }
+  setupDropdownHandlers(container) {
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', this.closeDropdowns);
 
+    // Dropdown toggle delegation
+    Utils.delegate(container, 'click', '.book-card__menu-trigger', (event) => {
+        event.stopPropagation();
+        const menuTrigger = event.target.closest('.book-card__menu-trigger');
+        const dropdown = menuTrigger.nextElementSibling;
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.book-card__dropdown.show')
+            .forEach(d => {
+                if (d !== dropdown) d.classList.remove('show');
+            });
+        
+        // Toggle current dropdown
+        dropdown.classList.toggle('show');
+    });
+
+    // Keyboard accessibility
+    Utils.delegate(container, 'keydown', '.book-card__menu-trigger', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            const dropdown = event.target.nextElementSibling;
+            dropdown.classList.toggle('show');
+        }
+    });
+}
+
+closeDropdowns = (event) => {
+    // Close dropdowns if click is outside any dropdown
+    if (!event.target.closest('.book-card__menu')) {
+        document.querySelectorAll('.book-card__dropdown.show')
+            .forEach(dropdown => dropdown.classList.remove('show'));
+    }
+}
   handleDeleteBook(bookId) {
     // Confirm deletion
     const confirmDelete = confirm("Are you sure you want to delete this book?");

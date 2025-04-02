@@ -22,7 +22,7 @@
     color: var(--color-dark);
     box-shadow: var(--box-shadow-sm);
     transition: all var(--transition-fast);
-    background-image: url('resources/searchIcon.png');
+    background-image: src("/home/mohammedtarek/college/web/ktaby_website/resources/searchIcon.svg");
     background-repeat: no-repeat;
     background-position: 15px center;
     background-size: 20px;

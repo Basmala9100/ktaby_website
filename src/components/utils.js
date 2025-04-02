@@ -1,15 +1,6 @@
-// src/components/utils.js - Utility functions
 
-/**
- * Utility functions for common operations
- */
 const Utils = {
-  /**
-   * Debounce function to limit function calls
-   * @param {Function} func - Function to debounce
-   * @param {number} delay - Delay in milliseconds
-   * @returns {Function} Debounced function
-   */
+
   debounce(func, delay) {
     let timeoutId;
     return function (...args) {
@@ -21,13 +12,6 @@ const Utils = {
     };
   },
 
-  /**
-   * Event delegation helper
-   * @param {HTMLElement} element - Parent element to attach listener to
-   * @param {string} eventType - Event type (click, submit, etc.)
-   * @param {string} selector - CSS selector to match target elements
-   * @param {Function} handler - Event handler function
-   */
   delegate(element, eventType, selector, handler) {
     element.addEventListener(eventType, (event) => {
       const targetElement = event.target.closest(selector);
@@ -38,11 +22,6 @@ const Utils = {
     });
   },
 
-  /**
-   * Get form values as an object
-   * @param {HTMLFormElement} form - Form element
-   * @returns {Object} Form values
-   */
   getFormValues(form) {
     const formData = new FormData(form);
     const values = {};
@@ -54,22 +33,14 @@ const Utils = {
     return values;
   },
 
-  /**
-   * Create an element with attributes and content
-   * @param {string} tag - Element tag name
-   * @param {Object} attributes - Element attributes
-   * @param {string|HTMLElement} content - Element content
-   * @returns {HTMLElement} Created element
-   */
+
   createElement(tag, attributes = {}, content = "") {
     const element = document.createElement(tag);
 
-    // Set attributes
     Object.entries(attributes).forEach(([key, value]) => {
       element.setAttribute(key, value);
     });
 
-    // Set content
     if (typeof content === "string") {
       element.innerHTML = content;
     } else if (content instanceof HTMLElement) {
@@ -79,12 +50,7 @@ const Utils = {
     return element;
   },
 
-  /**
-   * Validate form field
-   * @param {string} value - Field value
-   * @param {Object} rules - Validation rules
-   * @returns {string} Error message or empty string if valid
-   */
+
   validateField(value, rules = {}) {
     // Required validation
     if (rules.required && !value.trim()) {
@@ -128,12 +94,6 @@ const Utils = {
     return ""; // No error
   },
 
-  /**
-   * Validate entire form
-   * @param {Object} values - Form values
-   * @param {Object} validationRules - Rules for each field
-   * @returns {Object} Object with errors for each field
-   */
   validateForm(values, validationRules) {
     const errors = {};
 
@@ -148,14 +108,10 @@ const Utils = {
 
     return errors;
   },
-  /**
-   * Toggle dropdown visibility
-   * @param {HTMLElement} dropdown - Dropdown element to toggle
-   * @param {boolean} show - Whether to show or hide the dropdown
-   */
+
   toggleDropdown(dropdown, show) {
     if (show) {
-      dropdown.classList.add("show");
+      dropdow4n.classList.add("show");
     } else {
       dropdown.classList.remove("show");
     }

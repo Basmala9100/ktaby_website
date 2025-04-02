@@ -13,7 +13,7 @@ export default class AddBookRenderer {
         // Check if user is admin
         const currentUser = UsersController.getCurrentUser();
         if (!currentUser || currentUser.userType !== 'admin') {
-            this.app.navigateTo('home');
+            this.app.navigateTo('home', true);
             return;
         }
 
@@ -69,7 +69,7 @@ export default class AddBookRenderer {
         // Cancel button
         const cancelBtn = container.querySelector('#cancel-btn');
         cancelBtn.addEventListener('click', () => {
-            this.app.navigateTo('admin-dashboard');
+            this.app.navigateTo('admin-dashboard',true);
         });
 
         // Image preview handler
@@ -112,7 +112,7 @@ export default class AddBookRenderer {
 
         if (createResult.success) {
             Utils.showNotification('Book added successfully', 'success', 3000);
-            this.app.navigateTo('admin-dashboard');
+            this.app.navigateTo('admin-dashboard',true);
         } else {
             Utils.showNotification(`Failed to add book: ${createResult.error}`, 'danger', 3000);
         }
