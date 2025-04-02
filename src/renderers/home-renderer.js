@@ -1,4 +1,3 @@
-// src/renderers/home-renderer.js
 import BooksController from '../controllers/books-controller.js';
 
 export default class HomeRenderer {
@@ -26,9 +25,10 @@ export default class HomeRenderer {
         const searchResults = document.createElement('div');
         searchResults.id = 'search-results';
         searchResults.className = 'search-results';
-        searchResults.style.display = 'none';
+        searchResults.style.display = 'none'; // THIS IS IMPORTANT WITHOUT IT WE'LL HAVE 
+                                              // A SEARCH RESULTS DIV WITHOUT CONTENT
 
-        // Append elements
+        // Append elements to the home container
         homeContainer.appendChild(searchBar);
         homeContainer.appendChild(searchResults);
         homeContainer.appendChild(bookList);
@@ -58,7 +58,8 @@ export default class HomeRenderer {
     renderBooks(bookList, books = null) {
         bookList.innerHTML = '';
 
-        // Use provided books or get all books
+        // Use provided books or get all books (provided i.e. search results)
+        // default is fetching all books using the controller and rendering them
         const booksToRender = books || BooksController.getAllBooks();
 
         if (booksToRender.length === 0) {
@@ -77,7 +78,8 @@ export default class HomeRenderer {
         const bookCard = document.createElement('div');
         bookCard.className = 'book-card';
         bookCard.setAttribute('data-book-id', book.id);
-
+        // Set book ID for easy access later
+        // We use fixed size for the image to maintain layout and avoid shifts
         bookCard.innerHTML = `
             <img src="${book.imageUrl}" width="150" height="200" alt="${book.title}">
             <div style="flex-direction:row; justify-content: space-between;">
@@ -88,6 +90,7 @@ export default class HomeRenderer {
                     ${book.isBorrowed ? 'Borrowed' : 'Available'}
                 </p>
             </div>
+
             <a href="#" data-page="details" data-book-id="${book.id}" class="book-link">
                 View Details
             </a>
@@ -111,7 +114,9 @@ export default class HomeRenderer {
         const searchResults = homeContainer.querySelector('#search-results');
         
         // Debounce function to prevent too many searches while typing
-        const debounce = (func, delay) => {
+        // This is a common pattern to improve performance 
+        // and avoid unnecessary API (or function) calls
+        const debounce = (func, delay) => { 
             let timeoutId;
             return function() {
                 const context = this;
@@ -127,13 +132,13 @@ export default class HomeRenderer {
             const query = searchInput.value.trim();
             
             if (query) {
-                // Perform search
+                // Perform search. It is delegated to the controller to keep view logic separated
                 const searchResults = BooksController.searchBooks(query);
                 
                 // Update search results indicator
                 const resultElement = document.getElementById('search-results');
                 resultElement.textContent = `Found ${searchResults.length} ${searchResults.length === 1 ? 'book' : 'books'} matching "${query}"`;
-                resultElement.style.display = 'block';
+                resultElement.style.display = 'block'; // remember we left it hidden
                 
                 // Show clear search button
                 clearSearchButton.style.display = 'inline-block';
@@ -145,7 +150,7 @@ export default class HomeRenderer {
                 this.clearSearch();
             }
         };
-        
+         
         const debouncedSearch = debounce(handleSearch, 300);
 
         // Handle clear search

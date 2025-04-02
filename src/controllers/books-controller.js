@@ -27,11 +27,7 @@ class BooksController {
             borrowedBy: null
         }
     ];
-
-    /**
-     * Get all books from local storage
-     * @returns {Array} List of books
-     */
+    
     static getAllBooks() {
         let books = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
         
@@ -47,10 +43,6 @@ class BooksController {
         return books;
     }
 
-    /**
-     * Generate a unique ID for books
-     * @returns {string} Unique ID
-     */
     static generateUniqueId() {
         return Date.now().toString() + Math.random().toString(36).substr(2, 9);
     }

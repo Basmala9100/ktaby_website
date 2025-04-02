@@ -18,12 +18,15 @@ export default class App {
             details: new DetailsRenderer(this),
             login: new LoginRenderer(this),
             signup: new SignupRenderer(this),
-            'admin-dashboard': new AdminDashboardRenderer(this),
+            //Declared as string because '-' is reservered in JS
+            'admin-dashboard': new AdminDashboardRenderer(this), 
             'user-dashboard': new UserDashboardRenderer(this),
             'add-book': new AddBookRenderer(this)
         };
 
         // Bind methods
+        // this is because these methods are used as callbacks which means that this will be lost
+        // when the method is called, so we need to bind them to the current instance of the class
         this.navigateTo = this.navigateTo.bind(this);
         this.setupNavigation = this.setupNavigation.bind(this);
         this.updateNavbar = this.updateNavbar.bind(this);
@@ -44,11 +47,17 @@ export default class App {
     setupNavigation() {
         // Add click event listeners to navbar links
         const navbar = document.getElementById('main-navbar');
+        //we define a click event listener on the navbar(all of it)
+        // we identify clicked event using the event's target.closest method. This reduces memory
+        // usage and improves performance by not adding individual event listeners to each link
+        // this is a common pattern in event delegation
         navbar.addEventListener('click', (event) => {
+            // get the attribute containing which page to go to for the clicked element.
             const pageLink = event.target.closest('[data-page]');
-            if (pageLink) {
-                event.preventDefault();
-                const pageName = pageLink.dataset.page;
+        
+            if (pageLink) { // check if the clicked element has the data-page attribute
+                event.preventDefault(); // stop browser's default action
+                const pageName = pageLink.dataset.page; // get the page link
                 const params = Object.assign({}, pageLink.dataset);
                 delete params.page; // Remove page from params
 
@@ -62,7 +71,9 @@ export default class App {
             }
         });
     }
-
+    // remember that binding this method to the class instance is important
+    // because this method is used as a callback for the click event listener
+    // and we need to make sure that this refers to the class instance when the method is called
     navigateTo(pageName, params = {}) {
         try {
             // Clear previous content
@@ -113,7 +124,7 @@ export default class App {
         // Clear existing items
         navItems.innerHTML = '';
 
-        // Get current user
+        // Get current user (From the controller)
         const currentUser = UsersController.getCurrentUser();
 
         if (currentUser) {
@@ -160,10 +171,10 @@ export default class App {
             <p>The page you are looking for does not exist.</p>
             <button id="home-btn" class="btn">Go to Home</button>
         `;
-
+        // using querySelector to get the button element but we can also use getElementById
         const homeBtn = notFoundContainer.querySelector('#home-btn');
+        //const homeBtn = notFoundContainer.getElementById('home-btn'); 
         homeBtn.addEventListener('click', () => this.navigateTo('home'));
-
         this.container.appendChild(notFoundContainer);
     }
 
@@ -184,6 +195,8 @@ export default class App {
 }
 
 // Initialize the app when the DOM is fully loaded
+// This is done through the DOMContentLoaded event
+// This event is fired when the initial HTML document has been completely loaded
 document.addEventListener('DOMContentLoaded', () => {
     const appContainer = document.getElementById('app-container');
     const app = new App(appContainer);
