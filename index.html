@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ktaby Library</title>
+    <!-- Use our new modular CSS structure -->
+    <link rel="stylesheet" href="src/styles/main.css">
+    <!-- Keep the original for backward compatibility during transition -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar (remains constant) but the app can change it for user and admins -->
+    <nav id="main-navbar" class="navbar">
+        <div class="navbar__content">
+            <a href="#" class="navbar__brand" data-page="home">Ktaby</a>
+            <ul class="navbar__links">
+                <li class="navbar__item"><a href="#" class="navbar__link" data-page="home">Home</a></li>
+                <li class="navbar__item"><a href="#" class="navbar__link" data-page="signup">Sign Up</a></li>
+                <li class="navbar__item"><a href="#" class="navbar__link" data-page="login">Log In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content container -->
+    <main id="app-container" class="page">
+        <!-- Dynamic content will be rendered here -->
+    </main>
+
+    <!-- Footer (remains constant) -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Ktaby. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Include our new components -->
+    <script type="module" src="src/components/utils.js"></script>
+    <script type="module" src="src/components/templates.js"></script>
+    
+    <!-- Main application script -->
+    <script type="module" src="src/app.js"></script>
+</body>
+</html>
