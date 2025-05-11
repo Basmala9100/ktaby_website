@@ -100,7 +100,7 @@ export default class AddBookRenderer {
             Utils.showNotification('Please enter a valid image URL', 'danger', 3000);
             return;
         }
-
+        
         // Create new book
         const createResult = BooksController.createBook({
             title,

@@ -111,7 +111,7 @@ const Utils = {
 
   toggleDropdown(dropdown, show) {
     if (show) {
-      dropdow4n.classList.add("show");
+      dropdown.classList.add("show");
     } else {
       dropdown.classList.remove("show");
     }

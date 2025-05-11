@@ -110,30 +110,30 @@ export default class AdminDashboardRenderer {
 
     // Admin search functionality
     const searchBar = container.querySelector("#admin-search-bar");
-    const debouncedSearch = Utils.debounce(this.handleSearch.bind(this), 300);
+    const debouncedSearch = Utils.debounce(this.handleSearch.bind(this), 300);    
     searchBar.addEventListener("input", debouncedSearch);
 
     // Menu toggle delegation
     // Alternative approach with timeout
-Utils.delegate(container, 'click', '.book-card__menu-trigger', (event) => {
-    const menuTrigger = event.target.closest('.book-card__menu-trigger');
-    const dropdown = menuTrigger.nextElementSibling;
-    const isCurrentlyOpen = dropdown.classList.contains('show');
-    
-    // Close all dropdowns
-    document.querySelectorAll('.book-card__dropdown.show').forEach(d => {
-      d.classList.remove('show');
-    });
-    
-    // If the current dropdown wasn't open, open it after a tiny delay
-    if (!isCurrentlyOpen) {
-      setTimeout(() => {
-        dropdown.classList.add('show');
-      }, 10); // Small delay to ensure proper toggle behavior
-    }
-    
-    event.stopPropagation();
-  });
+    Utils.delegate(container, 'click', '.book-card__menu-trigger', (event) => {
+        const menuTrigger = event.target.closest('.book-card__menu-trigger');
+        const dropdown = menuTrigger.nextElementSibling;
+        const isCurrentlyOpen = dropdown.classList.contains('show');
+        
+        // Close all dropdowns
+        document.querySelectorAll('.book-card__dropdown.show').forEach(d => {
+          d.classList.remove('show');
+        });
+        
+        // If the current dropdown wasn't open, open it after a tiny delay
+        if (!isCurrentlyOpen) {
+          setTimeout(() => {
+            dropdown.classList.add('show');
+          }, 10); // Small delay to ensure proper toggle behavior
+        }
+        
+        event.stopPropagation();
+      });
 
     // Book action buttons using event delegation
     Utils.delegate(container, "click", "[data-action]", (event) => {
