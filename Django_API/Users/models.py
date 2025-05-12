@@ -14,7 +14,6 @@ def timestamp_id():
 
 class UserManager(models.Manager):
     def signup(self, username, email, password, user_type='user'):
-
         if not username or not email or not password:
             return {'success': False, 'error': 'All fields are required'}
         if self.filter(username=username).exists():
@@ -33,26 +32,17 @@ class UserManager(models.Manager):
             return {'success': False, 'error': 'Could not create user, please try again'}
         except DatabaseError:
             return {'success': False, 'error': 'Database error occurred'} 
-
         return {'success': True, 'user': user}
     
-    
     def login(self, username, password):
-        # 1. Validate input
         if not username or not password:
             return {'success': False, 'error': 'Username and password are required'}
-
-        # 2. Lookup user
         try:
             user = self.get(username=username)
         except self.model.DoesNotExist:
             return {'success': False, 'error': 'Invalid credentials'}
-
-        # 3. Verify password
         if not check_password(password, user.password):
             return {'success': False, 'error': 'Invalid credentials'}
-
-        # 4. Success
         return {'success': True, 'user': user}
 
 class BookManager(models.Manager):
@@ -197,7 +187,33 @@ class BookManager(models.Manager):
             Q(author__icontains=query) |
             Q(category__icontains=query)
         )
-
+    def batch_create_books(self, books_data):
+        new_books = []
+        errors = []
+        for book_data in books_data:
+            if not book_data.get('title') or not book_data.get('author'):
+                errors.append({'book_data': book_data, 'error': 'Title and author are required'})
+                continue
+            if self.filter(title=book_data['title'], author=book_data['author']).exists():
+                errors.append({'book_data': book_data, 'error': 'Book already exists'})
+                continue
+            try:
+                book = self.create_book(
+                    title=book_data['title'],
+                    author=book_data['author'],
+                    description=book_data.get('description', ''),
+                    category=book_data.get('category', ''),
+                    image_url=book_data.get('image_url', ''),
+                    borrowed_by_id=book_data.get('borrowed_by')
+                )
+                new_books.append(book)
+            except ValidationError as e:
+                errors.append({'book_data': book_data, 'error': str(e)})
+        return {
+            'success': len(new_books) > 0,
+            'new_books': new_books,
+            'errors': errors
+        }    
 
 class Book(models.Model):
     """

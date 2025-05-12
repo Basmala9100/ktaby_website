@@ -2,24 +2,22 @@ from rest_framework import serializers
 from .models import User, Book
 
 class SignupSerializer(serializers.Serializer):
-    username  = serializers.CharField(max_length=150)
-    email     = serializers.EmailField()
-    password  = serializers.CharField(min_length=8, write_only=True)
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    password = serializers.CharField(min_length=8, write_only=True)
     user_type = serializers.ChoiceField(
         choices=User.USER_TYPE_CHOICES,
-        default='user',
-        required=False
+        required=True  # Make user_type required
     )
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
+    username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'user_type', 'created_at']
-        read_only_fields = ['id', 'created_at']
 class BookSerializer(serializers.ModelSerializer):
     borrowed_by = serializers.CharField(source='borrowed_by.id', allow_null=True, required=False)
 

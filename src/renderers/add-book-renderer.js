@@ -78,7 +78,7 @@ export default class AddBookRenderer {
         imageUrlInput.addEventListener('paste', this.handleImagePreview.bind(this));
     }
 
-    handleAddBook(event) {
+    async handleAddBook(event) {
         event.preventDefault();
 
         // Get form data
@@ -102,7 +102,7 @@ export default class AddBookRenderer {
         }
         
         // Create new book
-        const createResult = BooksController.createBook({
+        const createResult = await BooksController.createBook({
             title,
             author,
             category,

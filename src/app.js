@@ -94,7 +94,7 @@ export default class App {
     this.handleInitialUrl();
   }
 
-  handleInitialUrl() {
+  async handleInitialUrl() {
     // Parse the current URL hash and query parameters
     const hash = window.location.hash.substring(1) || "home";
     const [pageName, queryString] = hash.split("?");
@@ -109,10 +109,10 @@ export default class App {
     }
 
     // Navigate to the parsed page without adding a history entry
-    this.navigateTo(pageName, params, false);
+    await this.navigateTo(pageName, params, false);
   }
 
-  navigateTo(pageName, params = {}, addToHistory = true) {
+  async navigateTo(pageName, params = {}, addToHistory = true) {
     try {
       // Clear previous content
       this.container.innerHTML = "";
@@ -141,31 +141,31 @@ export default class App {
       // Render based on page name
       switch (pageName) {
         case "home":
-          this.renderers.home.render(this.container);
+          await this.renderers.home.render(this.container);
           break;
         case "details":
           if (!params.bookId) {
             throw new Error("Book ID is required for details page");
           }
-          this.renderers.details.render(this.container, params.bookId);
+          await this.renderers.details.render(this.container, params.bookId);
           break;
         case "login":
-          this.renderers.login.render(this.container);
+          await this.renderers.login.render(this.container);
           break;
         case "signup":
-          this.renderers.signup.render(this.container);
+          await this.renderers.signup.render(this.container);
           break;
         case "admin-dashboard":
-          this.renderers["admin-dashboard"].render(this.container);
+          await this.renderers["admin-dashboard"].render(this.container);
           break;
         case "user-dashboard":
-          this.renderers["user-dashboard"].render(this.container);
+          await this.renderers["user-dashboard"].render(this.container);
           break;
         case "add-book":
-          this.renderers["add-book"].render(this.container);
+          await this.renderers["add-book"].render(this.container);
           break;
         case "edit-book":
-          this.renderers["edit-book"].render(this.container, params.bookId);
+          await this.renderers["edit-book"].render(this.container, params.bookId);
           break;
         default:
           this.renderNotFoundPage();
@@ -283,7 +283,7 @@ export default class App {
     }
   }
 
-  handleLogout() {
+  async handleLogout() {
     // Perform logout
     UsersController.logout();
 
@@ -291,7 +291,7 @@ export default class App {
     Utils.showNotification("Logged out successfully", "success", 2000);
 
     // Navigate to home page
-    this.navigateTo("home");
+    await this.navigateTo("home");
   }
 
   renderNotFoundPage() {

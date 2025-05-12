@@ -1,4 +1,3 @@
-// src/renderers/details-renderer.js
 import BooksController from '../controllers/books-controller.js';
 import UsersController from '../controllers/users-controller.js';
 import Templates from '../components/templates.js';
@@ -12,67 +11,57 @@ export default class DetailsRenderer {
         this.isEditMode = false;
     }
 
-    render(container, bookId) {
-        // Clear previous content
+    async render(container, bookId) {
         container.innerHTML = '';
-
-        // Get current user
         this.currentUser = UsersController.getCurrentUser();
 
-        // Find book by ID
-        this.currentBook = BooksController.findBookById(bookId);
+        try {
+            this.currentBook = await BooksController.findBookById(bookId);
+            console.log('Book fetched:', this.currentBook); // Debug
 
-        if (!this.currentBook) {
+            if (!this.currentBook) {
+                this.renderNotFound(container);
+                return;
+            }
+
+            const detailsContainer = Utils.createElement('div', { class: 'container' });
+            const isAdmin = this.currentUser && this.currentUser.userType === 'admin'; // Fixed from userType
+            detailsContainer.innerHTML = Templates.bookDetails(this.currentBook, this.currentUser, isAdmin);
+
+            container.appendChild(detailsContainer);
+            this.setupEventListeners(detailsContainer);
+        } catch (error) {
+            console.error('Error fetching book:', error);
             this.renderNotFound(container);
-            return;
         }
-
-        // Create details container
-        const detailsContainer = Utils.createElement('div', { class: 'container' });
-        
-        // Render book details using template
-        const isAdmin = this.currentUser && this.currentUser.userType === 'admin';
-        detailsContainer.innerHTML = Templates.bookDetails(this.currentBook, this.currentUser, isAdmin);
-
-        // Render to main container
-        container.appendChild(detailsContainer);
-
-        // Setup event listeners
-        this.setupEventListeners(detailsContainer);
     }
 
     setupEventListeners(container) {
-        // Setup edit button for admin
         const editBtn = container.querySelector('#edit-book-btn');
         if (editBtn) {
             editBtn.addEventListener('click', this.toggleEditMode.bind(this));
         }
 
-        // Setup borrow button for users
         const borrowBtn = container.querySelector('#borrow-btn');
         if (borrowBtn) {
             borrowBtn.addEventListener('click', this.handleBorrowAction.bind(this));
         }
         
-        // Setup return button for users
         const returnBtn = container.querySelector('#return-btn');
         if (returnBtn) {
             returnBtn.addEventListener('click', this.handleReturnAction.bind(this));
         }
 
-        // Setup save edit button for admin
         const saveEditBtn = container.querySelector('#save-edit-btn');
         if (saveEditBtn) {
             saveEditBtn.addEventListener('click', this.saveBookChanges.bind(this));
         }
         
-        // Setup cancel edit button for admin
         const cancelEditBtn = container.querySelector('#cancel-edit-btn');
         if (cancelEditBtn) {
             cancelEditBtn.addEventListener('click', this.toggleEditMode.bind(this));
         }
 
-        // Setup login link for non-logged in users
         Utils.delegate(container, 'click', '[data-page="login"]', (event) => {
             event.preventDefault();
             this.app.navigateTo('login');
@@ -94,105 +83,99 @@ export default class DetailsRenderer {
         }
     }
 
-    handleBorrowAction() {
-        // Strict validation for borrowing
+    async handleBorrowAction() {
         if (!this.currentUser) {
             Utils.showNotification('Please log in to borrow a book', 'warning', 3000);
             this.app.navigateTo('login');
             return;
         }
 
-        // Prevent borrowing if book is already borrowed
-        if (this.currentBook.isBorrowed) {
+        if (this.currentBook.is_borrowed) {
             Utils.showNotification('This book is currently unavailable', 'warning', 3000);
             return;
         }
 
-        // Ensure only users can borrow
-        if (this.currentUser.userType !== 'user') {
+        if (this.currentUser.userType !== 'user') { // Fixed from userType
             Utils.showNotification('Only users can borrow books', 'warning', 3000);
             return;
         }
 
-        // Perform borrow action
-        const updatedBook = BooksController.updateBook(this.currentBook.id, {
-            isBorrowed: true,
-            borrowedBy: this.currentUser.id
-        });
+        try {
+            const updatedBook = await BooksController.updateBook(this.currentBook.id, {
+                is_borrowed: true,
+                borrowedBy: this.currentUser.id
+            });
+            console.log('Borrow result:', updatedBook); // Debug
 
-        if (updatedBook.success) {
-            // Show success message
-            Utils.showNotification(`You have borrowed "${this.currentBook.title}"`, 'success', 3000);
-            
-            // Update current book reference
-            this.currentBook = updatedBook.book;
-            
-            // Re-render the page to show updated buttons and status
-            this.render(document.getElementById('app-container'), this.currentBook.id);
-        } else {
-            Utils.showNotification('Failed to borrow book', 'danger', 3000);
+            if (updatedBook.success) {
+                Utils.showNotification(`You have borrowed "${this.currentBook.title}"`, 'success', 3000);
+                this.currentBook = updatedBook.book;
+                await this.render(document.getElementById('app-container'), this.currentBook.id);
+            } else {
+                Utils.showNotification(`Failed to borrow book: ${updatedBook.error}`, 'danger', 3000);
+            }
+        } catch (error) {
+            console.error('Error borrowing book:', error);
+            Utils.showNotification('Error borrowing book', 'danger', 3000);
         }
     }
     
-    handleReturnAction() {
-        // Perform return action
-        const updatedBook = BooksController.updateBook(this.currentBook.id, {
-            isBorrowed: false,
-            borrowedBy: null
-        });
+    async handleReturnAction() {
+        try {
+            const updatedBook = await BooksController.updateBook(this.currentBook.id, {
+                is_borrowed: false,
+                borrowedBy: null
+            });
+            console.log('Return result:', updatedBook); // Debug
 
-        if (updatedBook.success) {
-            // Show success message
-            Utils.showNotification(`You have returned "${this.currentBook.title}"`, 'success', 3000);
-            
-            // Update current book reference
-            this.currentBook = updatedBook.book;
-            
-            // Re-render the page to show updated buttons and status
-            this.render(document.getElementById('app-container'), this.currentBook.id);
-        } else {
-            Utils.showNotification('Failed to return book', 'danger', 3000);
+            if (updatedBook.success) {
+                Utils.showNotification(`You have returned "${this.currentBook.title}"`, 'success', 3000);
+                this.currentBook = updatedBook.book;
+                await this.render(document.getElementById('app-container'), this.currentBook.id);
+            } else {
+                Utils.showNotification(`Failed to return book: ${updatedBook.error}`, 'danger', 3000);
+            }
+        } catch (error) {
+            console.error('Error returning book:', error);
+            Utils.showNotification('Error returning book', 'danger', 3000);
         }
     }
 
-    saveBookChanges() {
-        // Collect new values
+    async saveBookChanges() {
         const newTitle = document.getElementById('edit-title').value.trim();
         const newAuthor = document.getElementById('edit-author').value.trim();
         const newCategory = document.getElementById('edit-category').value.trim();
         const newDescription = document.getElementById('edit-description').value.trim();
 
-        // Validate inputs
         if (!newTitle || !newAuthor || !newCategory || !newDescription) {
             Utils.showNotification('All fields are required', 'danger', 3000);
             return;
         }
 
-        // Update book
-        const updatedBook = BooksController.updateBook(this.currentBook.id, {
-            title: newTitle,
-            author: newAuthor,
-            category: newCategory,
-            description: newDescription
-        });
+        try {
+            const updatedBook = await BooksController.updateBook(this.currentBook.id, {
+                title: newTitle,
+                author: newAuthor,
+                category: newCategory,
+                description: newDescription
+            });
+            console.log('Update result:', updatedBook); // Debug
 
-        if (updatedBook.success) {
-            // Update view
-            document.getElementById('book-title').textContent = newTitle;
-            document.getElementById('book-author').textContent = newAuthor;
-            document.getElementById('book-category').textContent = newCategory;
-            document.getElementById('book-description').textContent = newDescription;
+            if (updatedBook.success) {
+                document.getElementById('book-title').textContent = newTitle;
+                document.getElementById('book-author').textContent = newAuthor;
+                document.getElementById('book-category').textContent = newCategory;
+                document.getElementById('book-description').textContent = newDescription;
 
-            // Exit edit mode
-            this.toggleEditMode();
-
-            // Show success message
-            Utils.showNotification('Book updated successfully', 'success', 3000);
-            
-            // Update current book reference
-            this.currentBook = updatedBook.book;
-        } else {
-            Utils.showNotification('Failed to update book', 'danger', 3000);
+                this.toggleEditMode();
+                Utils.showNotification('Book updated successfully', 'success', 3000);
+                this.currentBook = updatedBook.book;
+            } else {
+                Utils.showNotification(`Failed to update book: ${updatedBook.error}`, 'danger', 3000);
+            }
+        } catch (error) {
+            console.error('Error updating book:', error);
+            Utils.showNotification('Error updating book', 'danger', 3000);
         }
     }
 

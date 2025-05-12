@@ -1,145 +1,77 @@
-// src/controllers/users-controller.js
-// change logout, current user, and isLoggedIn, login, signup, and getAllUsers to use API
-// CHANGE CURRENTUSER TO BE NULL BY DEFAULT and set it to user to returened from log in 
-// CHANGE SIGNUP TO USE API
-
 class UsersController {
-    // Key for storing users in local storage
     static STORAGE_KEY = 'ktaby_users';
     static CURRENT_USER_KEY = 'ktaby_current_user';
+    static API_BASE_URL = 'http://localhost:8000/api/';
 
-    /**
-     * Get all users from local storage
-     * @returns {Array} List of users
-     */
-    static getAllUsers() {
-        return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+    static async signup(userData) {
+        try {
+            if (!userData.userType) {
+                throw new Error('userType is required');
+            }
+            const payload = {
+                username: userData.username,
+                email: userData.email,
+                password: userData.password,
+                user_type: userData.userType // No fallback
+            };
+            console.log('Signup Payload:', payload); // Debug
+            const response = await fetch(`${this.API_BASE_URL}signup/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            console.log('Signup Response:', result); // Debug
+            if (!response.ok) {
+                console.error('Signup failed:', response.status, result);
+                return { success: false, error: result.error || 'Signup failed' };
+            }
+            result.userType = result.user_type || 'user'; // Fallback to 'user'
+            delete result.user_type; // Remove user_type from the result
+            
+            localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(result));
+            return { success: true, user: result };
+        } catch (error) {
+            console.error('Error in signup:', error.message);
+            return { success: false, error: error.message };
+        }
     }
 
-    /**
-     * Save users to local storage
-     * @param {Array} users 
-     */
-    static saveUsers(users) {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
+    static async login(username, password) {
+        console.log('Login attempt:', { username, password });
+        try {
+            const response = await fetch(`${this.API_BASE_URL}login/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const result = await response.json();
+            console.log('Login response:', response.status, result);
+            if (!response.ok) {
+                console.error('Login failed:', response.status, result);
+                return { success: false, error: result.error || 'Login failed' };
+            }
+            result.userType = result.user_type || 'user'; 
+            localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(result));
+
+            return { success: true, user: result };
+        } catch (error) {
+            console.error('Error in login:', error.message);
+            return { success: false, error: error.message };
+        }
     }
 
-    /**
-     * Signup a new user
-     * @param {Object} userData 
-     * @returns {Object} Signup result
-     */
-    static signup(userData) {
-        // Validate input
-        if (!userData.username || !userData.password || !userData.email) {
-            return { 
-                success: false, 
-                error: 'All fields are required' 
-            };
-        }
-
-        // Get existing users
-        const users = this.getAllUsers();
-
-        // Check if username already exists
-        if (users.some(user => user.username === userData.username)) {
-            return { 
-                success: false, 
-                error: 'Username already exists' 
-            };
-        }
-
-        // Check if email already exists
-        if (users.some(user => user.email === userData.email)) {
-            return { 
-                success: false, 
-                error: 'Email already in use' 
-            };
-        }
-
-        // Create new user object
-        const newUser = {
-            id: Date.now().toString(),
-            username: userData.username,
-            email: userData.email,
-            password: userData.password, // In a real app, this should be hashed
-            userType: userData.userType || 'user',
-            createdAt: new Date().toISOString()
-        };
-
-        // Add new user
-        users.push(newUser);
-
-        // Save to local storage
-        this.saveUsers(users);
-
-        return { 
-            success: true, 
-            user: newUser 
-        };
-    }
-
-    /**
-     * Login user
-     * @param {string} username 
-     * @param {string} password 
-     * @returns {Object} Login result
-     */
-    static login(username, password) {
-        // Validate input
-        if (!username || !password) {
-            return { 
-                success: false, 
-                error: 'Username and password are required' 
-            };
-        }
-
-        // Get existing users
-        const users = this.getAllUsers();
-
-        // Find user
-        const user = users.find(
-            u => u.username === username && u.password === password
-        );
-
-        if (!user) {
-            return { 
-                success: false, 
-                error: 'Invalid username or password' 
-            };
-        }
-
-        // Store current user in local storage
-        localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
-
-        return { 
-            success: true, 
-            user: user 
-        };
-    }
-
-    /**
-     * Get current logged-in user
-     * @returns {Object|null} Current user or null
-     */
     static getCurrentUser() {
         const currentUser = localStorage.getItem(this.CURRENT_USER_KEY);
         return currentUser ? JSON.parse(currentUser) : null;
     }
 
-    /**
-     * Logout current user
-     */
     static logout() {
         localStorage.removeItem(this.CURRENT_USER_KEY);
     }
 
-    /**
-     * Check if user is logged in
-     * @returns {boolean}
-     */
     static isLoggedIn() {
-        return !!this.getCurrentUser();
+        return !!localStorage.getItem(this.CURRENT_USER_KEY);
     }
 }
 
