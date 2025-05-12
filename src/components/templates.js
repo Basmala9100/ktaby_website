@@ -34,7 +34,7 @@ const Templates = {
    */
   bookCard(book, variant = "default", includeActions = true) {
     // Determine status class
-    const statusClass = book.isBorrowed
+    const statusClass = book.is_borrowed
       ? "book-card__status--borrowed"
       : "book-card__status--available";
 
@@ -77,7 +77,7 @@ const Templates = {
     }
 
     // Generate status text
-    const statusText = book.isBorrowed ? "Borrowed" : "Available";
+    const statusText = book.is_borrowed ? "Borrowed" : "Available";
 
     // Create a unified card structure for all variants
     if (variant === "admin") {
@@ -117,20 +117,26 @@ const Templates = {
    * @returns {string} Book list HTML
    */
   bookList(books, variant = "default", emptyMessage = "No books found.") {
-    if (!books || books.length === 0) {
-      return `<p class="no-books">${emptyMessage}</p>`;
+    if (!Array.isArray(books) || books.length === 0) {
+        console.warn('bookList: No valid books array provided:', books);
+        return `<p class="no-books">${emptyMessage}</p>`;
     }
 
-    const booksHtml = books
-      .map((book) => this.bookCard(book, variant))
-      .join("");
+    try {
+        const booksHtml = books
+            .map((book) => this.bookCard(book, variant))
+            .join("");
 
-    return `
-        <div class="book-list ${variant === "admin" ? "book-list--admin" : ""}">
-          ${booksHtml}
-        </div>
-      `;
-  },
+        return `
+            <div class="book-list ${variant === "admin" ? "book-list--admin" : ""}">
+                ${booksHtml}
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error generating book list:', error);
+        return `<p class="no-books">Error loading books</p>`;
+    }
+},
 
   /**
    * Create a form input field
@@ -421,7 +427,7 @@ const Templates = {
         `;
     } else if (user.userType === "user") {
       // Check if this user has borrowed the book
-      const userBorrowed = book.isBorrowed && book.borrowedBy === user.id;
+      const userBorrowed = book.is_borrowed && book.borrowed_by === user.id;
 
       if (userBorrowed) {
         actionButtonHtml = `
@@ -431,10 +437,10 @@ const Templates = {
         actionButtonHtml = `
             <button 
               id="borrow-btn" 
-              class="btn btn--primary ${book.isBorrowed ? "btn--disabled" : ""}"
-              ${book.isBorrowed ? "disabled" : ""}
+              class="btn btn--primary ${book.is_borrowed ? "btn--disabled" : ""}"
+              ${book.is_borrowed ? "disabled" : ""}
             >
-              ${book.isBorrowed ? "Book Unavailable" : "Borrow"}
+              ${book.is_borrowed ? "Book Unavailable" : "Borrow"}
             </button>
           `;
       }
@@ -470,9 +476,9 @@ const Templates = {
               <p>
                 <strong>Status:</strong> 
                 <span class="${
-                  book.isBorrowed ? "status-borrowed" : "status-available"
+                  book.is_borrowed ? "status-borrowed" : "status-available"
                 }">
-                  ${book.isBorrowed ? "Currently Borrowed" : "Available"}
+                  ${book.is_borrowed ? "Currently Borrowed" : "Available"}
                 </span>
               </p>
             </div>

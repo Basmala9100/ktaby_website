@@ -38,19 +38,44 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    'corsheaders',  # Added
     "Users"
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_PAGINATION_CLASS': None,
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Added
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+       'http://127.0.0.1:5500',  # Frontend origin
+       'http://localhost:5500',   # Add if using localhost
+   ]
+
+CORS_ALLOW_METHODS = [
+       'GET',
+       'POST',
+       'PUT',
+       'DELETE',
+       'OPTIONS',
+       'PATCH',
+   ]
+
+CORS_ALLOW_HEADERS = [
+       'content-type',
+       'authorization',
+   ]
 ROOT_URLCONF = 'Django_API.urls'
 
 TEMPLATES = [

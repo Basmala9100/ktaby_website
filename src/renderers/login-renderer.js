@@ -1,4 +1,3 @@
-// src/renderers/login-renderer.js
 import UsersController from '../controllers/users-controller.js';
 import Templates from '../components/templates.js';
 import Utils from '../components/utils.js';
@@ -57,7 +56,7 @@ export default class LoginRenderer {
         });
     }
     
-    handleLogin(event) {
+    async handleLogin(event) {
         // Get form values
         const form = event.target;
         const username = form.querySelector('#username').value.trim();
@@ -70,23 +69,29 @@ export default class LoginRenderer {
         }
         
         // Attempt login
-        const loginResult = UsersController.login(username, password);
-        
-        if (loginResult.success) {
-            // Show success message
-            Utils.showNotification('Login successful!', 'success', 2000);
+        try {
+            const loginResult = await UsersController.login(username, password);
+            console.log('Login Result:', loginResult); // Debug
             
-            // Determine destination based on user type
-            const userType = loginResult.user.userType;
-            
-            if (userType === 'admin') {
-                this.app.navigateTo('admin-dashboard');
+            if (loginResult.success) {
+                // Show success message
+                Utils.showNotification('Login successful!', 'success', 2000);
+                
+                // Determine destination based on user type
+                const userType = loginResult.user.user_type; // Fixed from userType
+                
+                if (userType === 'admin') {
+                    this.app.navigateTo('admin-dashboard');
+                } else {
+                    this.app.navigateTo('user-dashboard');
+                }
             } else {
-                this.app.navigateTo('user-dashboard');
+                // Show error message
+                this.showFormError(form, loginResult.error);
             }
-        } else {
-            // Show error message
-            this.showFormError(form, loginResult.error);
+        } catch (error) {
+            console.error('Error during login:', error);
+            this.showFormError(form, 'An unexpected error occurred. Please try again.');
         }
     }
     

@@ -9,7 +9,7 @@ export default class AdminDashboardRenderer {
     this.app = app;
   }
 
-  render(container) {
+  async render(container) {
     // Check if user is admin
     const currentUser = UsersController.getCurrentUser();
     if (!currentUser || currentUser.userType !== "admin") {
@@ -70,12 +70,12 @@ export default class AdminDashboardRenderer {
     this.setupEventListeners(dashboardContainer);
   }
 
-  renderBookList(books = null) {
+  async renderBookList(books = null) {
     const bookListContainer = document.getElementById(
       "admin-book-list-container"
     );
-    const booksToRender = books || BooksController.getAllBooks();
-
+    const booksToRender = books || await BooksController.getAllBooks();
+    console.log(booksToRender);
     // Update book count
     document.getElementById("total-books").textContent = booksToRender.length;
 
@@ -221,19 +221,19 @@ closeDropdowns = (event) => {
             .forEach(dropdown => dropdown.classList.remove('show'));
     }
 }
-  handleDeleteBook(bookId) {
+  async handleDeleteBook(bookId) {
     // Confirm deletion
     const confirmDelete = confirm("Are you sure you want to delete this book?");
 
     if (confirmDelete) {
-      const deleteResult = BooksController.deleteBook(bookId);
+      const deleteResult = await BooksController.deleteBook(bookId);
 
       if (deleteResult.success) {
         // Show notification
         Utils.showNotification("Book deleted successfully", "success", 3000);
 
         // Re-render book list
-        this.renderBookList();
+        await this.renderBookList();
       } else {
         Utils.showNotification("Failed to delete book", "danger", 3000);
       }

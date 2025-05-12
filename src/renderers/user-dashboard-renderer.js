@@ -10,12 +10,12 @@ export default class UserDashboardRenderer {
         this.currentUser = null;
     }
 
-    render(container) {
+    async render(container) {
         // Clear previous content
         container.innerHTML = '';
 
         // Get current user
-        this.currentUser = UsersController.getCurrentUser();
+        this.currentUser = await UsersController.getCurrentUser();
 
         if (!this.currentUser) {
             this.app.navigateTo('login');
@@ -58,11 +58,11 @@ export default class UserDashboardRenderer {
         this.setupEventHandlers(dashboardContainer);
     }
 
-    renderBorrowedBooks() {
+    async renderBorrowedBooks() {
         const borrowedBooksContainer = document.getElementById('borrowed-books-container');
         
         // Get books borrowed by current user
-        const borrowedBooks = BooksController.getBooksBorrowedByUser(this.currentUser.id);
+        const borrowedBooks = await BooksController.getBooksBorrowedByUser(this.currentUser.id);
 
         if (borrowedBooks.length === 0) {
             borrowedBooksContainer.innerHTML = '<p>You have not borrowed any books.</p>';
@@ -93,10 +93,10 @@ export default class UserDashboardRenderer {
         });
     }
 
-    handleReturnBook(bookId) {
+    async handleReturnBook(bookId) {
         // Update book status
-        const updatedBook = BooksController.updateBook(bookId, {
-            isBorrowed: false,
+        const updatedBook = await BooksController.updateBook(bookId, {
+            is_borrowed: false,
             borrowedBy: null
         });
 

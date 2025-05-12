@@ -66,16 +66,20 @@ export default class HomeRenderer {
         this.setupEventHandlers(homeContainer);
     }
 
-    renderBooks(books = null) {
+    async renderBooks(books = null) {
         const bookListContainer = document.getElementById('book-list-container');
-        const booksToRender = books || BooksController.getAllBooks();
-        
-        // Render books using template
-        bookListContainer.innerHTML = Templates.bookList(
-            booksToRender, 
-            'default', 
-            'No books found matching your search.'
-        );
+        try {
+            const booksToRender = books || await BooksController.getAllBooks();
+            console.log('Books to render:', booksToRender); // Debug
+            bookListContainer.innerHTML = Templates.bookList(
+                booksToRender, 
+                'default', 
+                'No books found matching your search.'
+            );
+        } catch (error) {
+            console.error('Error rendering books:', error);
+            bookListContainer.innerHTML = '<p class="no-books">Error loading books</p>';
+        }
     }
 
     setupEventHandlers(container) {

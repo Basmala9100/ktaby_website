@@ -1,4 +1,3 @@
-// src/renderers/signup-renderer.js
 import UsersController from '../controllers/users-controller.js';
 import Templates from '../components/templates.js';
 import Utils from '../components/utils.js';
@@ -64,14 +63,14 @@ export default class SignupRenderer {
             this.handleSignup(event);
         });
         
-        // Login link
+        // Signup link
         Utils.delegate(container, 'click', '[data-page="login"]', (event) => {
             event.preventDefault();
             this.app.navigateTo('login');
         });
     }
     
-    handleSignup(event) {
+    async handleSignup(event) {
         // Get form values
         const form = event.target;
         const username = form.querySelector('#signup-username').value.trim();
@@ -99,6 +98,12 @@ export default class SignupRenderer {
             return;
         }
         
+        // Password length validation
+        if (password.length < 8) {
+            this.showFormError(form, 'Password must be at least 8 characters long');
+            return;
+        }
+        
         // User type validation
         if (!userTypeInput) {
             this.showFormError(form, 'Please select a user type');
@@ -106,24 +111,31 @@ export default class SignupRenderer {
         }
         
         const userType = userTypeInput.value;
+        console.log('Selected userType:', userType); // Debug
         
         // Attempt signup
-        const signupResult = UsersController.signup({
-            username,
-            email,
-            password,
-            userType
-        });
-        
-        if (signupResult.success) {
-            // Show success message
-            Utils.showNotification('Signup successful! Please log in.', 'success', 3000);
+        try {
+            const signupResult = await UsersController.signup({
+                username,
+                email,
+                password,
+                userType
+            });
+            console.log('Signup Result:', signupResult); // Debug
             
-            // Navigate to login page
-            this.app.navigateTo('login');
-        } else {
-            // Show error message
-            this.showFormError(form, signupResult.error);
+            if (signupResult.success) {
+                // Show success message
+                Utils.showNotification('Signup successful! Please log in.', 'success', 3000);
+                
+                // Navigate to login page
+                this.app.navigateTo('login');
+            } else {
+                // Show error message
+                this.showFormError(form, signupResult.error);
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            this.showFormError(form, 'An unexpected error occurred. Please try again.');
         }
     }
     
