@@ -20,7 +20,11 @@ class BooksController {
     }
 
     static async createBook(bookData) {
+        console.log('Creating book with data:', JSON.stringify(bookData));
+
         try {
+            bookData.image_url = bookData.imageUrl;
+            delete bookData.imageUrl
             const response = await fetch(`${this.API_BASE_URL}books/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -53,7 +57,8 @@ class BooksController {
                             ...(updatedData.category     && { category:     updatedData.category }),
                             ...(updatedData.description  && { description:  updatedData.description }),
                             ...(typeof updatedData.is_borrowed === 'boolean' && { is_borrowed: updatedData.is_borrowed }),
-                            ...(updatedData.borrowedBy && { borrowed_by: updatedData.borrowedBy })
+                            ...(updatedData.borrowedBy && { borrowed_by: updatedData.borrowedBy }),
+                            ...(updatedData.imageUrl     && { image_url:    updatedData.imageUrl }),
                 };
                 console.log('Normalized data for update:', JSON.stringify(normalizedData));
                 
