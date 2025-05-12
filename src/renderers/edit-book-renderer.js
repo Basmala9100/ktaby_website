@@ -8,12 +8,12 @@ export default class EditBookRenderer {
     this.currentBook = null;
   }
 
-  render(container, bookId) {
+  async render(container, bookId) {
     // Clear container
     container.innerHTML = "";
 
     // Find book and handle not found scenario
-    this.currentBook = BooksController.findBookById(bookId);
+    this.currentBook = await BooksController.findBookById(bookId);
     if (!this.currentBook) {
       this.renderNotFound(container);
       return;
@@ -106,9 +106,9 @@ export default class EditBookRenderer {
     imageUrlInput.addEventListener("input", this.handleImagePreview.bind(this));
   }
 
-  handleSaveChanges(event) {
+  async handleSaveChanges(event) {
     event.preventDefault(); // Prevent default form submission
-
+    
     // Collect form values
     const formData = {
       title: document.querySelector("#title").value.trim(),
@@ -126,7 +126,7 @@ export default class EditBookRenderer {
     }
 
     // Attempt to update book
-    const updateResult = BooksController.updateBook(
+    const updateResult = await BooksController.updateBook(
       this.currentBook.id,
       formData
     );

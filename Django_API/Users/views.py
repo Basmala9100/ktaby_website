@@ -61,9 +61,12 @@ class BookRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().get_serializer(*args, **kwargs)
 
     def perform_update(self, serializer):
+        update_data = serializer.validated_data.copy()
+        borrowed = update_data.pop('borrowed_by', None)
+        if borrowed is not None:
+            borrowed_id = borrowed.get('id') if isinstance(borrowed, dict) else borrowed
+            update_data['borrowed_by_id'] = borrowed_id
         try:
-            update_data = serializer.validated_data.copy()
-            # All mapping of borrowed_by handled in serializer.validate/update
             book = Book.objects.update_book(
                 book_id=self.kwargs['pk'],
                 **update_data
@@ -82,6 +85,7 @@ class BookSearchView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         query = request.query_params.get('query', '')
+        print(query)
         try:
             books = Book.objects.search_books(query)
             serializer = BookSerializer(books, many=True)

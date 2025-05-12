@@ -30,6 +30,7 @@ class BookSerializer(serializers.ModelSerializer):
         """
         Validate uniqueness and borrowed_by.
         """
+        print(data)
         title = data.get('title')
         author = data.get('author')
         instance = self.instance
@@ -43,6 +44,7 @@ class BookSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({"title": f"A book with title '{title}' and author '{author}' already exists."})
 
         # Validate borrowed_by
+        
         borrowed_by_id = data.get('borrowed_by', {}).get('id') if data.get('borrowed_by') else None
         if borrowed_by_id:
             try:

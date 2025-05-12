@@ -124,13 +124,13 @@ export default class HomeRenderer {
         });
     }
 
-    handleSearch(event, searchResults, clearSearchButton) {
+    async handleSearch(event, searchResults, clearSearchButton) {
         const searchInput = document.querySelector('#search-bar');
         const query = searchInput.value.trim();
         
         if (query) {
             // Perform search
-            const searchResultsData = BooksController.searchBooks(query);
+            const searchResultsData = await BooksController.searchBooks(query);
             
             // Update search results indicator
             searchResults.textContent = `Found ${searchResultsData.length} ${

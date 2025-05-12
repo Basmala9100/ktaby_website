@@ -9,6 +9,9 @@ class BooksController {
                 return [];
             }
             const data = await response.json();
+            data.forEach(book => {
+                book.imageUrl = book.image_url;
+            })
             return Array.isArray(data) ? data : [];
         } catch (error) {
             console.error('Error in getAllBooks:', error.message);
@@ -50,10 +53,10 @@ class BooksController {
                             ...(updatedData.category     && { category:     updatedData.category }),
                             ...(updatedData.description  && { description:  updatedData.description }),
                             ...(typeof updatedData.is_borrowed === 'boolean' && { is_borrowed: updatedData.is_borrowed }),
-                           // map JS borrowedBy → DRF write-only borrowed_by_id
-                            ...(updatedData.borrowedBy !== undefined && { borrowed_by_id: updatedData.borrowedBy })
+                            ...(updatedData.borrowedBy && { borrowed_by: updatedData.borrowedBy })
                 };
-    
+                console.log('Normalized data for update:', JSON.stringify(normalizedData));
+                
                 const response = await fetch(`${this.API_BASE_URL}books/${bookId}/`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
