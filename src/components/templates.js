@@ -454,7 +454,7 @@ const Templates = {
     return `
         <div class="book-details-container">
           <div class="book-cover">
-            <img id="book-image" src="${book.imageUrl}" alt="${book.title}">
+            <img id="book-image" src="${book.image_url}" alt="${book.title}">
           </div>
           <div class="book-info">
             <div class="book-header">
