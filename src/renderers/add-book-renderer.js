@@ -107,7 +107,7 @@ export default class AddBookRenderer {
             author,
             category,
             description,
-            image_url: imageUrl,
+            imageUrl
         });
 
         if (createResult.success) {

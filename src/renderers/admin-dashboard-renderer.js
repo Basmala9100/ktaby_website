@@ -75,7 +75,6 @@ export default class AdminDashboardRenderer {
       "admin-book-list-container"
     );
     const booksToRender = books || await BooksController.getAllBooks();
-    console.log(booksToRender);
     // Update book count
     document.getElementById("total-books").textContent = booksToRender.length;
 

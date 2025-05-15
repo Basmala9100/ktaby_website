@@ -69,7 +69,7 @@ export default class EditBookRenderer {
                 <div class="form-group">
                     <label for="imageUrl" class="form-label">Image URL*</label>
                     <input type="url" id="imageUrl" class="form-control" 
-                           value="${this.currentBook.imageUrl}"
+                           value="${this.currentBook.image_url}"
                            placeholder="https://example.com/image.jpg" required>
                     <p class="form-text">Enter a valid URL for the book cover image</p>
                 </div>
@@ -78,7 +78,7 @@ export default class EditBookRenderer {
                     <p>Image Preview:</p>
                     <div id="image-preview-container" class="image-preview">
                         <img src="${
-                          this.currentBook.imageUrl
+                          this.currentBook.image_url
                         }" alt="Current Book Image" class="preview-image">
                     </div>
                 </div>

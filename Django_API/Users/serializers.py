@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'user_type', 'created_at']
+
 class BookSerializer(serializers.ModelSerializer):
     borrowed_by = serializers.CharField(source='borrowed_by.id', allow_null=True, required=False)
 
@@ -30,7 +31,7 @@ class BookSerializer(serializers.ModelSerializer):
         """
         Validate uniqueness and borrowed_by.
         """
-        print(data)
+        print("Inside serializer",data)
         title = data.get('title')
         author = data.get('author')
         instance = self.instance

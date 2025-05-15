@@ -95,7 +95,7 @@ class BookManager(models.Manager):
         """Create a new book with validation."""
         if self.filter(title=title, author=author).exists():
             raise ValidationError(f"A book with title '{title}' and author '{author}' already exists.")
-
+        
         borrowed_by = None
         if borrowed_by_id:
             try:
@@ -112,6 +112,9 @@ class BookManager(models.Manager):
             is_borrowed=bool(borrowed_by_id),
             borrowed_by=borrowed_by
         )
+        print(book.image_url)
+        if not book.image_url:
+            print("book.image_url is empty")
         book.full_clean()
         book.save()
         return book
