@@ -2,8 +2,7 @@ import time
 import uuid
 from django.db import models, IntegrityError, DatabaseError
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 
@@ -181,13 +180,14 @@ class BookManager(models.Manager):
         except User.DoesNotExist:
             raise ValidationError(f"User with ID {user_id} does not exist.")
         return self.filter(borrowed_by__id=user_id, is_borrowed=True)
+    
     def search_books(self, query):
-        """Search books by title, author, or category (case-insensitive)."""
         if not query:
             return self.all()
         return self.filter(
             Q(title__icontains=query) |
             Q(author__icontains=query) |
+            Q(description__icontains=query) |
             Q(category__icontains=query)
         )
     def batch_create_books(self, books_data):

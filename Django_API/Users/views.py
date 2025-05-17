@@ -6,7 +6,8 @@ from rest_framework.permissions import AllowAny
 from django.core.exceptions import ValidationError
 from .models import User, Book
 from .serializers import SignupSerializer, LoginSerializer, UserSerializer, BookSerializer
-
+import logging
+logger = logging.getLogger(__name__)
 class SignupAPIView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -83,14 +84,18 @@ class BookRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 class BookSearchView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request):
-        query = request.query_params.get('query', '')
-        print(query)
+        query = request.query_params.get('query', '').strip()
+        logger.info(f"[BookSearchView] Received search query: '{query}'")
+
         try:
             books = Book.objects.search_books(query)
+            logger.info(f"[BookSearchView] Found {books.count()} books matching query.")
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ValidationError as e:
+            logger.error(f"[BookSearchView] Error: {e}")
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class BooksBorrowedByUserView(APIView):

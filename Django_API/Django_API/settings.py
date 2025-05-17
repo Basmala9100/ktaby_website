@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     'corsheaders',  # Added
-    "Users"
+    "Users",
+    'django_extensions',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
